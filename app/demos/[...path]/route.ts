@@ -21,15 +21,20 @@ export async function GET(
     const cookieName = `access_${hash}`
 
     const authCookie = request.cookies.get(cookieName)
-    const globalAuthCookie = request.cookies.get('hub_authenticated')
+    const globalAuthCookie = request.cookies.get('hub_authenticated') // Fixed name
+
+    // Check URL for Bypass Key
+    const urlAuth = request.nextUrl.searchParams.get('auth')
+    const isUrlAuthenticated = urlAuth === 'taliyo-secret-access'
 
     // Access Granted if: 
     // - User has specific demo cookie ("granted")
     // - OR User is logged into Hub as Admin ("true")
-    // - OR Asset is public (thumb.jpg)
+    // - OR URL has secret key
     const isAuthorized =
         (authCookie && authCookie.value === 'granted') ||
-        (globalAuthCookie && globalAuthCookie.value === 'true');
+        (globalAuthCookie && globalAuthCookie.value === 'true') ||
+        isUrlAuthenticated;
 
     // Check if asset is public
     const isPublic = relativePath.toLowerCase().endsWith('thumb.jpg');
@@ -105,7 +110,8 @@ export async function GET(
         return new NextResponse(html, {
             headers: {
                 'Content-Type': 'text/html',
-                'Cache-Control': 'public, max-age=3600'
+                'Cache-Control': 'public, max-age=3600',
+                ...(isUrlAuthenticated ? { 'Set-Cookie': 'hub_authenticated=true; Path=/; HttpOnly; Secure; SameSite=Lax' } : {})
             }
         })
     }
