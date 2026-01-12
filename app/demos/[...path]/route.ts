@@ -12,17 +12,34 @@ export async function GET(
         return NextResponse.redirect(new URL('/', request.url))
     }
 
-    const demoName = segments[0]
-    const relativePath = segments.slice(1).join('/') || 'index.html' // Default to index.html if just folder
+    // Securely decode the path segment (Handles spaces like "Website _Business")
+    const demoName = decodeURIComponent(segments[0])
+    const relativePath = segments.slice(1).join('/') || 'index.html'
 
     // 1. Check Cookies for Auth
-    const cookieName = `access_${require('crypto').createHash('md5').update(demoName).digest('hex')}`
-    const authCookie = request.cookies.get(cookieName)
+    const hash = require('crypto').createHash('md5').update(demoName).digest('hex')
+    const cookieName = `access_${hash}`
 
-    // Check if asset is public (exception for thumbnails or specific assets if needed)
+    const authCookie = request.cookies.get(cookieName)
+    const globalAuthCookie = request.cookies.get('hub_authenticated')
+
+    // Access Granted if: 
+    // - User has specific demo cookie ("granted")
+    // - OR User is logged into Hub as Admin ("true")
+    // - OR Asset is public (thumb.jpg)
+    const isAuthorized =
+        (authCookie && authCookie.value === 'granted') ||
+        (globalAuthCookie && globalAuthCookie.value === 'true');
+
+    // Check if asset is public
     const isPublic = relativePath.toLowerCase().endsWith('thumb.jpg');
 
-    if (!isPublic && (!authCookie || authCookie.value !== 'granted')) {
+    if (!isPublic && !isAuthorized) {
+        // If requesting a non-HTML asset (JS/CSS), avoid Redirect loop/HTML response
+        // Just return 403 so the console error is clear (Forbidden) instead of SyntaxError
+        if (relativePath.endsWith('.js') || relativePath.endsWith('.css')) {
+            return new NextResponse('/* Access Denied */', { status: 403, headers: { 'Content-Type': 'application/javascript' } });
+        }
         return NextResponse.redirect(new URL('/unauthorized', request.url))
     }
 
