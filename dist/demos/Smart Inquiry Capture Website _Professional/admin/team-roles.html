@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team & Roles - Admin Panel</title>
+    <link rel="stylesheet" href="admin-styles.css">
+    <script src="../advanced-protection.js"></script>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="adminSidebar">
+        <div class="sidebar-header">
+            <h2>Smart Inquiry</h2>
+            <span class="badge-pro">PRO</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M3 7l7-5 7 5v11H3V7z" stroke="currentColor" stroke-width="2" />
+                </svg>
+                Dashboard
+            </a>
+            <a href="bookings.html" class="nav-item">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <rect x="3" y="4" width="14" height="14" rx="2" stroke="currentColor" stroke-width="2" />
+                </svg>
+                Bookings
+            </a>
+            <a href="staff.html" class="nav-item">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M16 17v-2a4 4 0 00-8 0v2M12 7a4 4 0 11-8 0 4 4 0 018 0z" stroke="currentColor"
+                        stroke-width="2" />
+                </svg>
+                Staff
+            </a>
+            <a href="analytics.html" class="nav-item">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M3 17V9M9 17V3M15 17v-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                Analytics
+            </a>
+            <a href="ai-settings.html" class="nav-item">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M10 3v14M3 10h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="2" />
+                </svg>
+                AI Settings
+            </a>
+            <a href="crm-sync.html" class="nav-item">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M4 12v5h5M16 8V3h-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    <path d="M16 3l-6 6M4 17l6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                CRM Sync
+            </a>
+            <a href="locations.html" class="nav-item">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M10 10m-3 0a3 3 0 106 0 3 3 0 10-6 0" stroke="currentColor" stroke-width="2" />
+                    <path d="M10 2c-3.866 0-7 3.134-7 7 0 5.25 7 11 7 11s7-5.75 7-11c0-3.866-3.134-7-7-7z"
+                        stroke="currentColor" stroke-width="2" />
+                </svg>
+                Locations
+            </a>
+            <a href="team-roles.html" class="nav-item active">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M14 6a4 4 0 11-8 0 4 4 0 018 0zM3 18a7 7 0 0114 0" stroke="currentColor"
+                        stroke-width="2" />
+                </svg>
+                Team & Roles
+            </a>
+            <a href="whatsapp-templates.html" class="nav-item">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M17 3H3v11h4l3 3 3-3h4V3zM7 8h6M7 11h4" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+                WhatsApp
+            </a>
+            <a href="settings.html" class="nav-item">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path
+                        d="M10 12a2 2 0 100-4 2 2 0 000 4zM10 3v2m0 10v2m7-7h-2M5 10H3m12.07-5.07l-1.41 1.41M6.34 13.66l-1.41 1.41m9.9 0l-1.41-1.41M6.34 6.34L4.93 4.93"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                Settings
+            </a>
+        </nav>
+        <button class="sidebar-logout" onclick="logout()">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M7 17H3V3h4M13 13l4-3-4-3M17 10H7" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" />
+            </svg>
+            Logout
+        </button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+        <header class="admin-header">
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+            <h1>Team & Roles</h1>
+            <div class="header-actions">
+                <button class="btn-primary" onclick="inviteTeamMember()">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                    Invite Member
+                </button>
+            </div>
+        </header>
+
+        <div class="admin-content">
+            <!-- Team Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                                stroke="white" stroke-width="2" />
+                        </svg>
+                    </div>
+                    <div class="stat-details">
+                        <span class="stat-label">Total Members</span>
+                        <span class="stat-value">8</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="10" stroke="white" stroke-width="2" />
+                            <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+                    </div>
+                    <div class="stat-details">
+                        <span class="stat-label">Active Users</span>
+                        <span class="stat-value">7</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2c-3.866 0-7 3.134-7 7 0 5.25 7 11 7 11s7-5.75 7-11c0-3.866-3.134-7-7-7z"
+                                stroke="white" stroke-width="2" />
+                            <circle cx="12" cy="9" r="2" stroke="white" stroke-width="2" />
+                        </svg>
+                    </div>
+                    <div class="stat-details">
+                        <span class="stat-label">Locations</span>
+                        <span class="stat-value">3</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Role-based View Tabs -->
+            <div class="role-tabs">
+                <button class="role-tab active" data-role="all">All Members (8)</button>
+                <button class="role-tab" data-role="owner">Owners (1)</button>
+                <button class="role-tab" data-role="manager">Managers (2)</button>
+                <button class="role-tab" data-role="staff">Staff (5)</button>
+            </div>
+
+            <!-- Team Members Table -->
+            <div class="team-table-container">
+                <table class="team-table">
+                    <thead>
+                        <tr>
+                            <th>Member</th>
+                            <th>Role</th>
+                            <th>Location Access</th>
+                            <th>Permissions</th>
+                            <th>Status</th>
+                            <th>Last Active</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Owner -->
+                        <tr>
+                            <td>
+                                <div class="member-info">
+                                    <div class="member-avatar"
+                                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                        AK
+                                    </div>
+                                    <div>
+                                        <div class="member-name">Amit Kumar</div>
+                                        <div class="member-email">amit@taliyotech.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="role-badge role-owner">Owner</span>
+                            </td>
+                            <td>
+                                <span class="access-badge">All Locations</span>
+                            </td>
+                            <td>
+                                <span class="permission-badge">Full Access</span>
+                            </td>
+                            <td>
+                                <span class="status-badge status-active">Active</span>
+                            </td>
+                            <td>
+                                <span class="time-label">Just now</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-icon" onclick="editMember(1)" title="Edit">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                            <path d="M11 2l3 3-9 9H2v-3l9-9z" stroke="currentColor" stroke-width="2" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Managers -->
+                        <tr>
+                            <td>
+                                <div class="member-info">
+                                    <div class="member-avatar"
+                                        style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                                        PS
+                                    </div>
+                                    <div>
+                                        <div class="member-name">Priya Sharma</div>
+                                        <div class="member-email">priya@taliyotech.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="role-badge role-manager">Manager</span>
+                            </td>
+                            <td>
+                                <span class="access-badge">Delhi, Mumbai</span>
+                            </td>
+                            <td>
+                                <span class="permission-badge">Manage Bookings</span>
+                            </td>
+                            <td>
+                                <span class="status-badge status-active">Active</span>
+                            </td>
+                            <td>
+                                <span class="time-label">5 min ago</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-icon" onclick="editMember(2)" title="Edit">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                            <path d="M11 2l3 3-9 9H2v-3l9-9z" stroke="currentColor" stroke-width="2" />
+                                        </svg>
+                                    </button>
+                                    <button class="btn-icon danger" onclick="removeMember(2)" title="Remove">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                            <path d="M2 4h12M5 4V2h6v2M6 7v5M10 7v5M3 4v10h10V4" stroke="currentColor"
+                                                stroke-width="2" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="member-info">
+                                    <div class="member-avatar"
+                                        style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                                        RV
+                                    </div>
+                                    <div>
+                                        <div class="member-name">Rahul Verma</div>
+                                        <div class="member-email">rahul@taliyotech.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="role-badge role-manager">Manager</span>
+                            </td>
+                            <td>
+                                <span class="access-badge">Bangalore</span>
+                            </td>
+                            <td>
+                                <span class="permission-badge">Manage Bookings</span>
+                            </td>
+                            <td>
+                                <span class="status-badge status-active">Active</span>
+                            </td>
+                            <td>
+                                <span class="time-label">12 min ago</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-icon" onclick="editMember(3)" title="Edit">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                            <path d="M11 2l3 3-9 9H2v-3l9-9z" stroke="currentColor" stroke-width="2" />
+                                        </svg>
+                                    </button>
+                                    <button class="btn-icon danger" onclick="removeMember(3)" title="Remove">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                            <path d="M2 4h12M5 4V2h6v2M6 7v5M10 7v5M3 4v10h10V4" stroke="currentColor"
+                                                stroke-width="2" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Staff Members -->
+                        <tr>
+                            <td>
+                                <div class="member-info">
+                                    <div class="member-avatar" style="background: #cbd5e1; color: #64748b;">
+                                        NS
+                                    </div>
+                                    <div>
+                                        <div class="member-name">Neha Singh</div>
+                                        <div class="member-email">neha@taliyotech.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="role-badge role-staff">Staff</span>
+                            </td>
+                            <td>
+                                <span class="access-badge">Delhi</span>
+                            </td>
+                            <td>
+                                <span class="permission-badge">View Own</span>
+                            </td>
+                            <td>
+                                <span class="status-badge status-active">Active</span>
+                            </td>
+                            <td>
+                                <span class="time-label">1 hour ago</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-icon" onclick="editMember(4)" title="Edit">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                            <path d="M11 2l3 3-9 9H2v-3l9-9z" stroke="currentColor" stroke-width="2" />
+                                        </svg>
+                                    </button>
+                                    <button class="btn-icon danger" onclick="removeMember(4)" title="Remove">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                            <path d="M2 4h12M5 4V2h6v2M6 7v5M10 7v5M3 4v10h10V4" stroke="currentColor"
+                                                stroke-width="2" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="member-info">
+                                    <div class="member-avatar" style="background: #cbd5e1; color: #64748b;">
+                                        VK
+                                    </div>
+                                    <div>
+                                        <div class="member-name">Vikram Kumar</div>
+                                        <div class="member-email">vikram@taliyotech.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="role-badge role-staff">Staff</span>
+                            </td>
+                            <td>
+                                <span class="access-badge">Mumbai</span>
+                            </td>
+                            <td>
+                                <span class="permission-badge">View Own</span>
+                            </td>
+                            <td>
+                                <span class="status-badge status-active">Active</span>
+                            </td>
+                            <td>
+                                <span class="time-label">2 hours ago</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-icon" onclick="editMember(5)" title="Edit">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                            <path d="M11 2l3 3-9 9H2v-3l9-9z" stroke="currentColor" stroke-width="2" />
+                                        </svg>
+                                    </button>
+                                    <button class="btn-icon danger" onclick="removeMember(5)" title="Remove">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                            <path d="M2 4h12M5 4V2h6v2M6 7v5M10 7v5M3 4v10h10V4" stroke="currentColor"
+                                                stroke-width="2" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="member-info">
+                                    <div class="member-avatar" style="background: #cbd5e1; color: #64748b;">
+                                        SM
+                                    </div>
+                                    <div>
+                                        <div class="member-name">Sneha Mehta</div>
+                                        <div class="member-email">sneha@taliyotech.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="role-badge role-staff">Staff</span>
+                            </td>
+                            <td>
+                                <span class="access-badge">Bangalore</span>
+                            </td>
+                            <td>
+                                <span class="permission-badge">View Own</span>
+                            </td>
+                            <td>
+                                <span class="status-badge status-inactive">Inactive</span>
+                            </td>
+                            <td>
+                                <span class="time-label">2 days ago</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-icon" onclick="editMember(6)" title="Edit">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                            <path d="M11 2l3 3-9 9H2v-3l9-9z" stroke="currentColor" stroke-width="2" />
+                                        </svg>
+                                    </button>
+                                    <button class="btn-icon danger" onclick="removeMember(6)" title="Remove">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                            <path d="M2 4h12M5 4V2h6v2M6 7v5M10 7v5M3 4v10h10V4" stroke="currentColor"
+                                                stroke-width="2" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Permission Matrix -->
+            <div class="permission-matrix-section">
+                <h2>Permission Matrix</h2>
+                <p class="section-description">Understand what each role can do</p>
+
+                <table class="permission-matrix">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Owner</th>
+                            <th>Manager</th>
+                            <th>Staff</th>
+                            <th>Viewer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>View All Bookings</td>
+                            <td><span class="check-mark">✓</span></td>
+                            <td><span class="check-mark">✓</span></td>
+                            <td><span class="cross-mark">✗</span></td>
+                            <td><span class="check-mark">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>Manage Bookings</td>
+                            <td><span class="check-mark">✓</span></td>
+                            <td><span class="check-mark">✓</span></td>
+                            <td><span class="cross-mark">✗</span></td>
+                            <td><span class="cross-mark">✗</span></td>
+                        </tr>
+                        <tr>
+                            <td>View Own Bookings</td>
+                            <td><span class="check-mark">✓</span></td>
+                            <td><span class="check-mark">✓</span></td>
+                            <td><span class="check-mark">✓</span></td>
+                            <td><span class="cross-mark">✗</span></td>
+                        </tr>
+                        <tr>
+                            <td>Manage Staff</td>
+                            <td><span class="check-mark">✓</span></td>
+                            <td><span class="check-mark">✓</span></td>
+                            <td><span class="cross-mark">✗</span></td>
+                            <td><span class="cross-mark">✗</span></td>
+                        </tr>
+                        <tr>
+                            <td>View Analytics</td>
+                            <td><span class="check-mark">✓</span></td>
+                            <td><span class="check-mark">✓</span></td>
+                            <td><span class="cross-mark">✗</span></td>
+                            <td><span class="check-mark">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>Manage Settings</td>
+                            <td><span class="check-mark">✓</span></td>
+                            <td><span class="cross-mark">✗</span></td>
+                            <td><span class="cross-mark">✗</span></td>
+                            <td><span class="cross-mark">✗</span></td>
+                        </tr>
+                        <tr>
+                            <td>AI & CRM Settings</td>
+                            <td><span class="check-mark">✓</span></td>
+                            <td><span class="cross-mark">✗</span></td>
+                            <td><span class="cross-mark">✗</span></td>
+                            <td><span class="cross-mark">✗</span></td>
+                        </tr>
+                        <tr>
+                            <td>Manage Locations</td>
+                            <td><span class="check-mark">✓</span></td>
+                            <td><span class="cross-mark">✗</span></td>
+                            <td><span class="cross-mark">✗</span></td>
+                            <td><span class="cross-mark">✗</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="admin-script.js"></script>
+    <script>
+        // Role tabs functionality
+        const roleTabs = document.querySelectorAll('.role-tab');
+        roleTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                roleTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                showNotification(`Filtering by: ${tab.textContent}`, 'info');
+            });
+        });
+
+        function inviteTeamMember() {
+            showNotification('Invite team member feature coming soon!', 'info');
+        }
+
+        function editMember(id) {
+            showNotification(`Editing member #${id}`, 'info');
+        }
+
+        function removeMember(id) {
+            if (confirm('Are you sure you want to remove this team member?')) {
+                showNotification('Team member removed successfully!', 'success');
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Smart Inquiry Admin</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="admin-styles.css">
+    <!-- Advanced Code Protection -->
+    <script src="../advanced-protection.js"></script>
+</head>
+
+<body class="admin-body">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="adminSidebar">
+        <div class="sidebar-header">
+            <svg class="sidebar-logo" viewBox="0 0 40 40" fill="none">
+                <rect width="40" height="40" rx="8" fill="url(#sidebar-gradient)" />
+                <path d="M12 20L18 26L28 14" stroke="white" stroke-width="3" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                <defs>
+                    <linearGradient id="sidebar-gradient" x1="0" y1="0" x2="40" y2="40">
+                        <stop offset="0%" stop-color="#667eea" />
+                        <stop offset="100%" stop-color="#764ba2" />
+                    </linearGradient>
+                </defs>
+            </svg>
+            <span class="sidebar-title">Smart Inquiry</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item active">
+                <svg class="nav-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M3 7l7-5 7 5v11H3V7z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="bookings.html" class="nav-item">
+                <svg class="nav-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <rect x="3" y="4" width="14" height="14" rx="2" stroke="currentColor" stroke-width="2" />
+                    <path d="M7 2v4M13 2v4M3 8h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <span>Bookings</span>
+                <span class="nav-badge">12</span>
+            </a>
+            <a href="staff.html" class="nav-item">
+                <svg class="nav-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <circle cx="10" cy="7" r="4" stroke="currentColor" stroke-width="2" />
+                    <path d="M3 18c0-4 3-7 7-7s7 3 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <span>Staff</span>
+            </a>
+            <a href="analytics.html" class="nav-item">
+                <svg class="nav-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M3 17V9M10 17V3M17 17v-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <span>Analytics</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <svg class="nav-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="2" />
+                    <path
+                        d="M10 1v2m0 14v2M3.93 3.93l1.41 1.41m9.9 9.9l1.41 1.41M1 10h2m14 0h2M3.93 16.07l1.41-1.41m9.9-9.9l1.41-1.41"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="logout-btn" onclick="logout()">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M7 17H3V3h4M13 13l4-3-4-3M17 10H7" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span>Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+        <!-- Top Bar -->
+        <header class="admin-header">
+            <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <h1 class="page-title">Dashboard</h1>
+
+            <div class="header-actions">
+                <button class="header-btn">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M10 18a8 8 0 100-16 8 8 0 000 16zM10 6v4l3 3" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" />
+                    </svg>
+                </button>
+                <button class="header-btn">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path
+                            d="M10 5a2 2 0 012 2c0 1.5-2 4-2 4s-2-2.5-2-4a2 2 0 012-2zM10 1v2m0 14v2M3.93 3.93l1.41 1.41m9.9 9.9l1.41 1.41M1 10h2m14 0h2M3.93 16.07l1.41-1.41m9.9-9.9l1.41-1.41"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                    <span class="notification-dot"></span>
+                </button>
+                <div class="user-menu">
+                    <img src="https://ui-avatars.com/api/?name=Demo+Admin&background=667eea&color=fff" alt="Admin"
+                        class="user-avatar">
+                    <span class="user-name">Demo Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect x="3" y="6" width="18" height="15" rx="2" stroke="white" stroke-width="2" />
+                            <path d="M8 3v6M16 3v6M3 10h18" stroke="white" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <h3 class="stat-value">24</h3>
+                        <p class="stat-label">Total Bookings</p>
+                        <span class="stat-change positive">+12% from last month</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="white" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <h3 class="stat-value">12</h3>
+                        <p class="stat-label">Pending</p>
+                        <span class="stat-change neutral">Needs attention</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="8" r="5" stroke="white" stroke-width="2" />
+                            <path d="M3 21c0-5 4-9 9-9s9 4 9 9" stroke="white" stroke-width="2"
+                                stroke-linecap="round" />
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <h3 class="stat-value">5</h3>
+                        <p class="stat-label">Active Staff</p>
+                        <span class="stat-change positive">All available</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M3 12l6 6L21 6" stroke="white" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <h3 class="stat-value">92%</h3>
+                        <p class="stat-label">Conversion Rate</p>
+                        <span class="stat-change positive">+5% this week</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Bookings & Quick Actions -->
+            <div class="dashboard-grid">
+                <!-- Recent Bookings -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Recent Bookings</h2>
+                        <a href="bookings.html" class="card-action">View All →</a>
+                    </div>
+                    <div class="bookings-list" id="recentBookings">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Quick Actions</h2>
+                    </div>
+                    <div class="quick-actions">
+                        <button class="action-btn" onclick="window.location.href='bookings.html?action=new'">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" />
+                            </svg>
+                            <span>New Booking</span>
+                        </button>
+                        <button class="action-btn" onclick="window.location.href='staff.html?action=new'">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <circle cx="10" cy="7" r="4" stroke="currentColor" stroke-width="2" />
+                                <path d="M3 18c0-4 3-7 7-7s7 3 7 7" stroke="currentColor" stroke-width="2" />
+                            </svg>
+                            <span>Add Staff</span>
+                        </button>
+                        <button class="action-btn" onclick="sendTestNotification()">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M10 5a2 2 0 012 2c0 1.5-2 4-2 4s-2-2.5-2-4a2 2 0 012-2z" stroke="currentColor"
+                                    stroke-width="2" />
+                                <path d="M15 16H5l1-4h8l1 4z" stroke="currentColor" stroke-width="2" />
+                            </svg>
+                            <span>Send Notification</span>
+                        </button>
+                        <button class="action-btn" onclick="window.location.href='analytics.html'">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M3 17V9M10 17V3M17 17v-6" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" />
+                            </svg>
+                            <span>View Analytics</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Timeline -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h2 class="card-title">Recent Activity</h2>
+                </div>
+                <div class="activity-timeline" id="activityTimeline">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="admin-script.js"></script>
+    <script>
+        // Check authentication
+        if (sessionStorage.getItem('adminAuth') !== 'true') {
+            window.location.href = 'login.html';
+        }
+
+        // Load dashboard data
+        loadDashboardData();
+    </script>
+</body>
+
+</html>

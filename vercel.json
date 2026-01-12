@@ -1,0 +1,25 @@
+{
+    "functions": {
+        "dist/*.php": {
+            "runtime": "vercel-php@0.6.0"
+        }
+    },
+    "routes": [
+        {
+            "src": "/dist/demos/(.*)",
+            "dest": "/dist/router.php?path=$1"
+        },
+        {
+            "src": "/demos/(.*)",
+            "dest": "/dist/router.php?path=$1"
+        },
+        {
+            "src": "/dist/(.*)",
+            "dest": "/dist/$1"
+        },
+        {
+            "src": "/",
+            "dest": "/dist/index.php"
+        }
+    ]
+}
