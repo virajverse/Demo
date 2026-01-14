@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Taliyo Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --bg-secondary: #13131a;
+            --text: #ffffff;
+            --text-secondary: #a1a1aa;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --card-bg: #18181b;
+            --border: rgba(255, 255, 255, 0.08);
+            --success: #22c55e;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            background-image: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.1) 0px, transparent 50%);
+        }
+
+        .header {
+            padding: 24px 40px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .logo::before {
+            content: '⚡';
+            font-size: 24px;
+        }
+
+        .btn-logout {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-logout:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        .section-header {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff 0%, #a1a1aa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        /* Upload */
+        .upload-section {
+            margin-bottom: 48px;
+        }
+
+        .upload-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+            border: 2px dashed var(--border);
+            border-radius: 16px;
+            padding: 48px 32px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-card.dragover {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            transform: scale(1.01);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .upload-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .upload-desc {
+            color: var(--text-secondary);
+            margin-bottom: 28px;
+            line-height: 1.6;
+        }
+
+        .btn-upload {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-upload:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .upload-status {
+            margin-top: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            min-height: 24px;
+        }
+
+        .upload-status.success {
+            color: var(--success);
+        }
+
+        .upload-status.error {
+            color: var(--danger);
+        }
+
+        /* Generator */
+        .generator-section {
+            margin-bottom: 48px;
+        }
+
+        .generator-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+        }
+
+        .gen-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .gen-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .link-box {
+            display: flex;
+            gap: 12px;
+        }
+
+        .link-box input {
+            flex: 1;
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: var(--accent);
+            padding: 12px 16px;
+            border-radius: 10px;
+        }
+
+        .link-box button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .guide-box {
+            background: rgba(99, 102, 241, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            border-left: 4px solid var(--accent);
+            margin-top: 24px;
+        }
+
+        /* Demos Grid */
+        .demos-section {
+            margin-bottom: 48px;
+        }
+
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .btn-refresh {
+            background: none;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-refresh:hover {
+            transform: rotate(90deg);
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .demo-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .demo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), #8b5cf6);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s;
+        }
+
+        .demo-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        /* New Card UI */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .demo-icon-box {
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+        }
+
+        .demo-title-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .btn-icon-sm {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            display: flex;
+            opacity: 0.5;
+            transition: all 0.2s;
+        }
+
+        .btn-icon-sm:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .demo-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+        }
+
+        .demo-type-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-success {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+        }
+
+        .badge-warning {
+            background: rgba(234, 179, 8, 0.15);
+            color: #facc15;
+        }
+
+        .badge-error {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+
+        .badge-static {
+            background: rgba(99, 102, 241, 0.15);
+            color: #818cf8;
+        }
+
+        .demo-msg {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .demo-link-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .demo-link {
+            font-size: 13px;
+            color: var(--accent);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .demo-link:hover {
+            gap: 10px;
+            color: var(--accent-hover);
+        }
+
+        .demo-actions {
+            margin-top: auto;
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .btn-start {
+            background: rgba(34, 197, 94, 0.1);
+            color: #4ade80;
+            border-color: rgba(34, 197, 94, 0.2);
+        }
+
+        .btn-start:hover {
+            background: rgba(34, 197, 94, 0.2);
+        }
+
+        .btn-stop {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-stop:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .btn-icon:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-icon.btn-delete:hover {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            margin: 5% auto;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            padding: 0;
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 24px 32px;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: white;
+            margin-top: 8px;
+        }
+
+        .modal-footer {
+            padding: 20px 32px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .btn-save {
+            background: var(--accent);
+            border: none;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .config-field {
+            display: grid;
+            grid-template-columns: 1fr 1fr 36px;
+            gap: 12px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+
+        .config-key,
+        .config-value {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: white;
+            font-size: 13px;
+            transition: border-color 0.2s;
+            font-family: monospace;
+        }
+
+        .config-key:focus,
+        .config-value:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .btn-remove {
+            width: 36px;
+            height: 36px;
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .btn-remove:hover {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .btn-add-var {
+            margin-top: 16px;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .btn-add-var:hover {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 40px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">Taliyo Admin</div>
+        <button class="btn-logout" onclick="logout()">Logout</button>
+    </header>
+
+    <main class="container">
+        <section class="upload-section">
+            <div class="section-header">
+                <h1 class="section-title">Upload New Demo</h1>
+                <p class="section-subtitle">Drag & drop or select a .zip file</p>
+            </div>
+            <div class="upload-card" id="dropZone">
+                <div class="upload-icon">☁️</div>
+                <div class="upload-title">Upload New Demo</div>
+                <p class="upload-desc">Drag & Drop Zip or Select Option</p>
+
+                <div style="display:flex; gap:16px; justify-content:center; margin-bottom: 20px;">
+                    <button class="btn-upload" onclick="document.getElementById('zipInput').click()">Select Zip</button>
+                    <button class="btn-upload"
+                        style="background:rgba(255,255,255,0.05); border:1px solid var(--border); color:var(--text);"
+                        onclick="document.getElementById('folderInput').click()">Select Folder</button>
+                </div>
+
+                <input type="file" id="zipInput" accept=".zip" style="display:none" onchange="handleZip(this.files[0])">
+                <input type="file" id="folderInput" webkitdirectory directory style="display:none"
+                    onchange="handleFolder(this.files)">
+
+                <div id="uploadStatus" class="upload-status"></div>
+            </div>
+        </section>
+
+        <section class="generator-section">
+            <div class="section-header">
+                <h1 class="section-title">Smart Link Generator</h1>
+            </div>
+            <div class="generator-card">
+                <div class="gen-header">
+                    <h2>🔗 Generate Link</h2>
+                </div>
+                <div class="gen-inputs">
+                    <div class="form-group"><label>Demo Site</label><select id="demoSelect"
+                            onchange="generateLink()"></select></div>
+                    <div class="form-group"><label>Return URL</label><input type="url" id="returnUrl"
+                            placeholder="https://..." oninput="generateLink()"></div>
+                </div>
+                <div class="gen-output">
+                    <div class="link-box"><input type="text" id="finalLink" readonly><button
+                            onclick="copyLink()">Copy</button></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="demos-section">
+            <div class="list-header">
+                <h2>Active Demos</h2>
+                <button class="btn-refresh" onclick="loadDemos()"><span>↻</span> Refresh</button>
+            </div>
+            <div id="demoGrid" class="demo-grid">
+                <div class="loading">Loading...</div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Rename Modal -->
+    <div id="renameModal" class="modal">
+        <div class="modal-content" style="max-width: 400px; margin-top: 15vh;">
+            <div class="modal-header">
+                <h2>Rename Demo</h2>
+                <button class="btn-close" onclick="closeRenameModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label style="color:var(--text-secondary); font-size:13px;">New Name</label>
+                    <input type="text" id="renameInput" placeholder="Enter new name" class="modal-input"
+                        autocomplete="off">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeRenameModal()">Cancel</button>
+                <button class="btn-save" onclick="confirmRename()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link Editor Modal -->
+    <div id="linkModal" class="modal">
+        <div class="modal-content" style="max-width: 400px; margin-top: 15vh;">
+            <div class="modal-header">
+                <h2>Edit Entry URL</h2>
+                <button class="btn-close" onclick="closeLinkModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:13px; color:#aaa; margin-bottom:12px;">Override the link entry point (e.g.
+                    login.html or /api)</p>
+                <input type="text" id="linkInput" class="modal-input" placeholder="e.g. index.html">
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeLinkModal()">Cancel</button>
+                <button class="btn-save" onclick="saveLink()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Config Modal -->
+    <div id="configModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚙️ Config</h2>
+                <button class="btn-close" onclick="closeConfigModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom:20px; color:var(--text-secondary);">Config for: <strong id="configDemoName"
+                        style="color:white;"></strong></p>
+                <div id="configFields"></div>
+                <button onclick="addConfigField()" class="btn-add-var">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Add Variable
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeConfigModal()">Cancel</button>
+                <button class="btn-save" onclick="saveConfig()">Save Config</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Icons -->
+    <svg style="display: none;">
+        <symbol id="icon-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </symbol>
+        <symbol id="icon-server" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+            <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+            <line x1="6" y1="6" x2="6.01" y2="6"></line>
+            <line x1="6" y1="18" x2="6.01" y2="18"></line>
+        </symbol>
+        <symbol id="icon-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </symbol>
+        <symbol id="icon-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+        </symbol>
+        <symbol id="icon-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        </symbol>
+        <symbol id="icon-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path
+                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+            </path>
+        </symbol>
+        <symbol id="icon-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </symbol>
+        <symbol id="icon-stop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+        </symbol>
+        <symbol id="icon-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+        </symbol>
+        <symbol id="icon-external-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+        </symbol>
+    </svg>
+
+    <script>
+        const icon = (id) => `<svg width="18" height="18"><use href="#icon-${id}"></use></svg>`;
+        const iconLg = (id) => `<svg width="24" height="24"><use href="#icon-${id}"></use></svg>`;
+
+        // Rename
+        let renameTarget = '';
+        function openRenameModal(name) { renameTarget = name; document.getElementById('renameInput').value = name; document.getElementById('renameModal').style.display = 'block'; document.getElementById('renameInput').focus(); }
+        function closeRenameModal() { document.getElementById('renameModal').style.display = 'none'; renameTarget = ''; }
+        async function confirmRename() {
+            const oldName = renameTarget;
+            const newName = document.getElementById('renameInput').value.trim();
+            if (!newName || newName === oldName) { closeRenameModal(); return; }
+            if (!/^[a-zA-Z0-9_\-\s]+$/.test(newName)) { alert('Invalid name.'); return; }
+            try {
+                const res = await fetch('/api/rename', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ oldName, newName }) });
+                const data = await res.json();
+                if (data.success) { closeRenameModal(); loadDemos(); } else { alert('Failed: ' + data.message); }
+            } catch (e) { alert('Error renaming'); }
+        }
+
+        // Link Edit
+        let linkTarget = '';
+        function openLinkModal(name, currentUrl) {
+            linkTarget = name;
+            // Clean up url for display
+            let displayUrl = currentUrl;
+            if (displayUrl === 'null' || !displayUrl) displayUrl = '';
+            document.getElementById('linkInput').value = displayUrl;
+            document.getElementById('linkModal').style.display = 'block';
+            document.getElementById('linkInput').focus();
+        }
+        function closeLinkModal() { document.getElementById('linkModal').style.display = 'none'; linkTarget = ''; }
+
+        async function saveLink() {
+            if (!linkTarget) return;
+            const newUrl = document.getElementById('linkInput').value.trim();
+
+            // Fetch existing config first
+            try {
+                const res = await fetch(`/api/config/${linkTarget}`);
+                const data = await res.json();
+                const config = data.config || {};
+
+                // Update customUrl
+                config.customUrl = newUrl;
+
+                // Save back
+                await fetch(`/api/config/${linkTarget}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ config })
+                });
+                closeLinkModal();
+                loadDemos();
+            } catch (e) { alert('Error saving link'); }
+        }
+
+        // Config
+        let currentDemo = '';
+        let currentConfig = {};
+        async function openConfigModal(name) {
+            currentDemo = name;
+            document.getElementById('configDemoName').textContent = name;
+            document.getElementById('configModal').style.display = 'block';
+            try {
+                const res = await fetch(`/api/config/${name}`);
+                currentConfig = (await res.json()).config || {};
+                renderConfigFields();
+            } catch (e) { currentConfig = {}; renderConfigFields(); }
+        }
+        function closeConfigModal() { document.getElementById('configModal').style.display = 'none'; currentDemo = ''; }
+        function renderConfigFields() {
+            const c = document.getElementById('configFields'); c.innerHTML = '';
+            Object.entries(currentConfig).forEach(([k, v]) => {
+                if (k === 'customUrl') return; // Hide customUrl from generic list to avoid confusion
+                c.appendChild(createConfigField(k, v));
+            });
+            if (!c.children.length) addConfigField();
+        }
+        function createConfigField(k = '', v = '') {
+            const d = document.createElement('div'); d.className = 'config-field';
+            d.innerHTML = `
+                <input type="text" placeholder="Key" value="${k}" class="config-key" spellcheck="false">
+                <input type="text" placeholder="Value" value="${v}" class="config-value" spellcheck="false">
+                <button class="btn-remove" onclick="this.parentElement.remove()" title="Remove Variable">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>`;
+            return d;
+        }
+        function addConfigField() { document.getElementById('configFields').appendChild(createConfigField()); }
+        async function saveConfig() {
+            const newConfig = {};
+            document.querySelectorAll('.config-field').forEach(f => {
+                const k = f.querySelector('.config-key').value.trim();
+                const v = f.querySelector('.config-value').value.trim();
+                if (k) newConfig[k] = v;
+            });
+            // Preserve customUrl if it exists
+            if (currentConfig.customUrl) newConfig.customUrl = currentConfig.customUrl;
+
+            await fetch(`/api/config/${currentDemo}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ config: newConfig }) });
+            closeConfigModal();
+            alert('Config Saved');
+        }
+
+        // Upload
+        const dropZone = document.getElementById('dropZone');
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(e => dropZone.addEventListener(e, preventDefaults, false));
+        function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+        ['dragenter', 'dragover'].forEach(e => dropZone.addEventListener(e, () => dropZone.classList.add('dragover'), false));
+        ['dragleave', 'drop'].forEach(e => dropZone.addEventListener(e, () => dropZone.classList.remove('dragover'), false));
+        dropZone.addEventListener('drop', (e) => handleZip(e.dataTransfer.files[0]), false);
+
+        async function handleZip(file) {
+            if (!file) return;
+            if (!file.name.endsWith('.zip')) {
+                return alert('For Drag & Drop, only .zip files are supported. Use "Select Folder" button for folders.');
+            }
+            uploadFile(file);
+        }
+
+        async function handleFolder(files) {
+            if (!files || files.length === 0) return;
+            const status = document.getElementById('uploadStatus');
+            status.textContent = 'Preparing folder (zipping)...';
+            status.className = 'upload-status';
+
+            try {
+                const zip = new JSZip();
+                const firstPath = files[0].webkitRelativePath;
+                const rootName = firstPath.split('/')[0];
+
+                Array.from(files).forEach(file => {
+                    const parts = file.webkitRelativePath.split('/');
+                    parts.shift(); // Remove root folder name
+                    const relPath = parts.join('/');
+                    if (relPath) zip.file(relPath, file);
+                });
+
+                status.textContent = 'Compressing...';
+                const content = await zip.generateAsync({ type: "blob" });
+                const zipFile = new File([content], rootName + ".zip", { type: "application/zip" });
+
+                uploadFile(zipFile);
+            } catch (e) {
+                console.error(e);
+                status.textContent = 'Error processing folder';
+                status.className = 'upload-status error';
+            }
+        }
+
+        async function uploadFile(file) {
+            const status = document.getElementById('uploadStatus');
+            status.textContent = 'Uploading...';
+            status.className = 'upload-status';
+
+            const formData = new FormData();
+            formData.append('demoZip', file);
+
+            try {
+                const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                const data = await res.json();
+                if (data.success) {
+                    status.textContent = 'Upload Successful!';
+                    status.className = 'upload-status success';
+                    loadDemos();
+                } else {
+                    status.textContent = data.message || 'Upload Failed';
+                    status.className = 'upload-status error';
+                }
+            } catch (e) {
+                status.textContent = 'Connection Error';
+                status.className = 'upload-status error';
+            }
+        }
+
+        // Logic
+        async function loadDemos() {
+            const grid = document.getElementById('demoGrid');
+            const select = document.getElementById('demoSelect');
+            try {
+                const [dRes, rRes] = await Promise.all([fetch('/api/demos'), fetch('/api/demo/running')]);
+                if (dRes.status === 401) return window.location.href = '/admin/login.html';
+                const demos = (await dRes.json()).demos;
+                const running = (await rRes.json()).demos || {};
+
+                grid.innerHTML = ''; select.innerHTML = '<option value="">-- Choose --</option>';
+                if (!demos.length) { grid.innerHTML = '<div class="loading">No demos found</div>'; return; }
+
+                demos.forEach(d => {
+                    const name = d.name || d;
+                    const type = d.type || 'static';
+                    const customUrl = d.customUrl;
+                    const runInfo = running[name];
+                    const isRun = !!runInfo;
+
+                    let status = '', iconType = iconLg('globe'), actions = '', url = `/${name}/index.html`;
+
+                    if (type === 'nextjs') iconType = iconLg('zap');
+                    if (type === 'nodejs') iconType = iconLg('server');
+
+                    // Determine URL
+                    if (customUrl) {
+                        if (customUrl.match(/^https?:\/\//)) {
+                            url = customUrl;
+                        } else if (isRun) {
+                            url = `http://${window.location.hostname}:${runInfo.port}${customUrl.startsWith('/') ? customUrl : '/' + customUrl}`;
+                        } else {
+                            url = `/${name}/${customUrl.replace(/^\//, '')}`;
+                        }
+                    } else if (isRun) {
+                        url = `http://${window.location.hostname}:${runInfo.port}`;
+                    }
+
+                    if (type !== 'static' && type !== 'error') {
+                        if (isRun) {
+                            status = `<span class="badge badge-success">● Running :${runInfo.port}</span>`;
+                            actions = `<button class="btn-action btn-stop" onclick="stopDemo('${name}')">${icon('stop')} Stop</button>`;
+                        } else {
+                            url = '#';
+                            status = `<span class="badge badge-warning">● Stopped</span>`;
+                            actions = `<button class="btn-action btn-start" onclick="startDemo('${name}')">${icon('play')} Start</button>`;
+                        }
+                    } else if (type === 'error') {
+                        status = `<span class="badge badge-error">Error</span>`;
+                    } else {
+                        status = `<span class="badge badge-static">Static Site</span>`;
+                    }
+
+                    const card = document.createElement('div');
+                    card.className = `demo-card ${isRun ? 'running' : ''}`;
+                    card.innerHTML = `
+                        <div class="card-header"><div class="demo-icon-box">${iconType}</div>${status}</div>
+                        <div class="demo-info">
+                            <div class="demo-title-row"><span class="demo-name" title="${name}">${name}</span><button class="btn-icon-sm" onclick="openRenameModal('${name}')">${icon('edit')}</button></div>
+                            <div class="demo-type-label">${type.toUpperCase()}</div>
+                        </div>
+                        ${type !== 'static' && !isRun && type !== 'error'
+                            ? `<div class="demo-msg">Start server to visit</div>`
+                            : `<div class="demo-link-row"><a href="${url}" target="_blank" class="demo-link">Open Demo ${icon('external-link')}</a> <button class="btn-icon-sm" onclick="openLinkModal('${name}', '${customUrl || ''}')">${icon('edit')}</button></div>`}
+                        <div class="demo-actions">
+                            ${actions}
+                            <button class="btn-icon" onclick="openConfigModal('${name}')">${icon('settings')}</button>
+                            <button class="btn-icon btn-delete" onclick="deleteDemo('${name}')">${icon('trash')}</button>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+
+                    const opt = document.createElement('option'); opt.value = name; opt.textContent = name;
+                    select.appendChild(opt);
+                });
+            } catch (e) { grid.innerHTML = 'Error loading demos'; console.error(e); }
+        }
+
+        async function startDemo(name) {
+            try { await fetch(`/api/demo/start/${name}`, { method: 'POST' }); loadDemos(); } catch (e) { alert('Error'); }
+        }
+        async function stopDemo(name) {
+            try { await fetch(`/api/demo/stop/${name}`, { method: 'POST' }); loadDemos(); } catch (e) { alert('Error'); }
+        }
+        async function deleteDemo(name) {
+            if (!confirm('Delete?')) return;
+            try { await fetch('/api/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ folderName: name }) }); loadDemos(); } catch (e) { alert('Error'); }
+        }
+        async function logout() { await fetch('/api/logout', { method: 'POST' }); window.location.href = '/admin/login.html'; }
+
+        function generateLink() {
+            const d = document.getElementById('demoSelect').value;
+            const r = document.getElementById('returnUrl').value;
+            if (d) document.getElementById('finalLink').value = `${window.location.origin}/${d}/index.html` + (r ? `?return=${encodeURIComponent(r)}` : '');
+        }
+        function copyLink() {
+            const t = document.getElementById('finalLink'); t.select(); navigator.clipboard.writeText(t.value);
+        }
+
+        window.onclick = (e) => {
+            if (e.target.id === 'configModal') closeConfigModal();
+            if (e.target.id === 'renameModal') closeRenameModal();
+            if (e.target.id === 'linkModal') closeLinkModal();
+        };
+
+        loadDemos();
+    </script>
+</body>
+
+</html>

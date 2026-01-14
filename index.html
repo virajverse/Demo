@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taliyo Technologies Live</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #000;
+            color: white;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Subtle animated background */
+        .bg {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #000 70%);
+            animation: pulseBg 10s infinite alternate;
+        }
+
+        @keyframes pulseBg {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        .container {
+            text-align: center;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+            background: linear-gradient(90deg, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #22c55e;
+            border-radius: 50%;
+            margin-right: 10px;
+            box-shadow: 0 0 10px #22c55e;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            font-weight: 300;
+            margin-bottom: 3rem;
+        }
+
+        .btn-marketplace {
+            display: inline-flex;
+            align-items: center;
+            padding: 16px 40px;
+            background: white;
+            color: black;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 100px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-size: 1.1rem;
+        }
+
+        .btn-marketplace:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.15);
+        }
+
+        /* Hidden Admin Link */
+        .admin-trigger {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: #333;
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .admin-trigger:hover {
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg"></div>
+
+    <div class="container">
+        <h1><span class="status-dot"></span>Taliyo Technologies Live</h1>
+        <p class="subtitle">Demo Environment Online</p>
+
+        <a href="https://taliyotechnologies.com/taliyomarketplace" class="btn-marketplace">
+            Go To Taliyo Marketplace
+        </a>
+    </div>
+</body>
+
+</html>
