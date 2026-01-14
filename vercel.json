@@ -5,10 +5,5 @@
             "source": "/(.*)",
             "destination": "/server.js"
         }
-    ],
-    "env": {
-        "ADMIN_USER": "@admin_user",
-        "ADMIN_PASS": "@admin_pass",
-        "SECRET_KEY": "@secret_key"
-    }
+    ]
 }
