@@ -4,7 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#0a0a0f">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
     <title>Dashboard | Taliyo Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
@@ -92,6 +98,7 @@
             font-weight: 700;
             margin-bottom: 8px;
             background: linear-gradient(135deg, #fff 0%, #a1a1aa 100%);
+            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -158,9 +165,7 @@
             transform: translateY(-2px);
         }
 
-        #fileInput {
-            display: none;
-        }
+
 
         .upload-status {
             margin-top: 20px;
@@ -299,6 +304,63 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 24px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .header {
+                padding: 16px 20px;
+            }
+
+            .container {
+                padding: 24px 16px;
+            }
+
+            .gen-inputs {
+                grid-template-columns: 1fr;
+            }
+
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .upload-card {
+                padding: 32px 20px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+
+            .modal-content {
+                margin: 10% 16px;
+                width: calc(100% - 32px);
+            }
         }
 
         .demo-card {
@@ -769,6 +831,10 @@
                 <h2>Active Demos</h2>
                 <button class="btn-refresh" onclick="loadDemos()"><span>↻</span> Refresh</button>
             </div>
+            <div class="search-box">
+                <input type="text" id="demoSearch" class="search-input" placeholder="🔍 Search demos..."
+                    oninput="filterDemos()">
+            </div>
             <div id="demoGrid" class="demo-grid">
                 <div class="loading">Loading...</div>
             </div>
@@ -1180,6 +1246,20 @@
             if (e.target.id === 'renameModal') closeRenameModal();
             if (e.target.id === 'linkModal') closeLinkModal();
         };
+
+        function filterDemos() {
+            const query = document.getElementById('demoSearch').value.toLowerCase();
+            const cards = document.querySelectorAll('.demo-card');
+            cards.forEach(card => {
+                const name = card.querySelector('.demo-name')?.textContent.toLowerCase() || '';
+                const type = card.querySelector('.demo-type-label')?.textContent.toLowerCase() || '';
+                if (name.includes(query) || type.includes(query)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
 
         loadDemos();
     </script>
