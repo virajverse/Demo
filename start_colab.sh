@@ -38,14 +38,21 @@ echo "✅ Node dependencies ready."
 echo "🚀 [4/4] Starting Taliyo Demo Server on port 3000..."
 node server.js > server.log 2>&1 &
 SERVER_PID=$!
-sleep 3
 
-# Verify server is responding
-if curl -s http://127.0.0.1:3000 > /dev/null; then
-    echo "✅ Demo Server is LIVE at http://127.0.0.1:3000 (PID: $SERVER_PID)"
-else
-    echo "⚠️ Waiting for server to initialize..."
-    sleep 2
+READY=0
+for i in {1..20}; do
+    HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:3000 2>/dev/null)
+    if [ "$HTTP_STATUS" != "000" ] && [ -n "$HTTP_STATUS" ]; then
+        echo "✅ Demo Server is LIVE at http://127.0.0.1:3000 (HTTP $HTTP_STATUS, PID: $SERVER_PID)"
+        READY=1
+        break
+    fi
+    sleep 1
+done
+
+if [ $READY -eq 0 ]; then
+    echo "⚠️ Server taking time to respond. Log preview:"
+    tail -n 15 server.log 2>/dev/null
 fi
 
 echo "========================================================="
@@ -53,15 +60,11 @@ echo "🌐 CONNECTING TO CUSTOM SUBDOMAIN..."
 echo "========================================================="
 
 # Priority 1: Cloudflare Tunnel with Credentials config.yml
-if [ -f ".cloudflared/config.yml" ] && [ -f ".cloudflared/b4747fcf-4b2a-4bf1-af94-76e7969a214f.json" ]; then
+if [ -f ".cloudflared/config.yml" ] && [ -f ".cloudflared/885a4c8c-d937-4685-a8f2-58ca7158acf0.json" ]; then
     echo "🔗 Connecting to https://demo.taliyotechnologies.com via Cloudflare..."
     cloudflared tunnel --config .cloudflared/config.yml run
-# Priority 2: Cloudflare Tunnel with CF_TOKEN env variable
-elif [ -n "$CF_TOKEN" ]; then
-    echo "🔗 Connecting to Cloudflare using CF_TOKEN..."
-    cloudflared tunnel run --token "$CF_TOKEN"
-# Priority 3: Quick Cloudflare Tunnel (Free SSL, Instant Domain)
+# Priority 2: Cloudflare Tunnel with Token for taliyo-demos (885a4c8c)
 else
-    echo "🔗 Launching Free Cloudflare Tunnel (Instant SSL)..."
-    cloudflared tunnel --url http://localhost:3000
+    echo "🔗 Connecting to https://demo.taliyotechnologies.com using taliyo-demos token..."
+    cloudflared tunnel run --token "eyJhIjoiNjYxNWNlZjY2MDlkZTVlMDk0YzI3MDY0MzllMzFiYjgiLCJzIjoiMm5nYkp3Z0o2bXRDekhwSmtnZS9pYXdYWjlmeWViNnAwaDhjaUlJTW9xWT0iLCJ0IjoiODg1YTRjOGMtZDkzNy00Njg1LWE4ZjItNThjYTcxNThhY2YwIn0="
 fi
