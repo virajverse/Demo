@@ -1,0 +1,7 @@
+tunnel: b4747fcf-4b2a-4bf1-af94-76e7969a214f
+credentials-file: .cloudflared/b4747fcf-4b2a-4bf1-af94-76e7969a214f.json
+
+ingress:
+  - hostname: demo.taliyotechnologies.com
+    service: http://127.0.0.1:3000
+  - service: http_status:404
