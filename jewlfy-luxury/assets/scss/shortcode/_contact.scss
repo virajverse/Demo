@@ -1,0 +1,301 @@
+/*====================================================
+  25. Contact
+======================================================*/
+.cs_contact_section {
+
+  .cs_contact_heading {
+    margin-bottom: 24px;
+  }
+}
+
+.cs_contact_form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  .cs_form_field {
+    &.cs_form_field_full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      margin-bottom: 6px;
+      color: var(--primary-color);
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      display: block;
+      outline: 0;
+      resize: none;
+      padding: 14px 12px;
+      color: var(--primary-color);
+      background-color: var(--gray-color);
+      border: 1px solid transparent;
+      transition: border-color 0.3s ease-in-out;
+
+      &::placeholder {
+        color: var(--gray2-color);
+      }
+
+      &:focus {
+        border-color: var(--accent-color);
+      }
+    }
+  }
+
+  .cs_select_field {
+    .nice-select {
+      width: 100%;
+      float: none;
+      height: auto;
+      font-size: 16px;
+      line-height: 1.5em;
+      padding: 14px 40px 14px 12px;
+      border-radius: 0;
+      color: var(--gray2-color);
+      border: 1px solid transparent;
+      background-color: var(--gray-color);
+      transition: border-color 0.3s ease-in-out;
+
+      &:hover {
+        border-color: transparent;
+      }
+
+      &.open,
+      &:active,
+      &:focus {
+        border-color: var(--accent-color);
+      }
+
+      &::after {
+        width: 8px;
+        height: 8px;
+        right: 16px;
+        margin-top: -6px;
+        border-bottom: 2px solid var(--secondary-color);
+        border-right: 2px solid var(--secondary-color);
+      }
+
+      &.open::after {
+        border-color: var(--accent-color);
+      }
+
+      .current {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: var(--primary-color);
+      }
+
+      .list {
+        width: 100%;
+        margin-top: 6px;
+        border-radius: 0;
+        border: 1px solid var(--gray-color);
+      }
+
+      .option {
+        padding: 6px 15px;
+        color: var(--secondary-color);
+        transition:
+          background-color 0.2s ease-in-out,
+          color 0.2s ease-in-out;
+
+        &:hover,
+        &.focus,
+        &.selected.focus {
+          background-color: var(--gray5-color);
+          color: var(--primary-color);
+        }
+
+        &.selected {
+          font-weight: 400;
+          color: var(--primary-color);
+        }
+      }
+    }
+  }
+
+  .cs_btn_style_1 {
+    width: max-content;
+
+    &:hover {
+      border-color: var(--accent-color);
+    }
+  }
+
+  @include cs-respond("mobile") {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cs_contact_info_wrap {
+  width: min(100%, 312px);
+  display: flex;
+  gap: 32px;
+  margin-left: auto;
+  flex-direction: column;
+
+  .cs_contact_info_title {
+    margin-bottom: 12px;
+  }
+
+  .cs_contact_social_title {
+    margin-bottom: 24px;
+  }
+
+  .cs_contact_info_text {
+    font-family: var(--secondary-font);
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--secondary-color);
+    margin-bottom: 16px;
+
+    a {
+      color: var(--secondary-color);
+      transition: color 0.3s ease-in-out;
+
+      &:hover {
+        color: var(--accent-color);
+      }
+    }
+  }
+
+  .cs_social_btns_style_1 {
+    gap: 6px;
+
+    a {
+      color: var(--primary-color);
+      background-color: var(--border-color);
+
+      &:hover {
+        color: var(--white-color);
+        background-color: var(--accent-color);
+      }
+    }
+  }
+
+  @include cs-respond("tablet-lg") {
+    width: 100%;
+  }
+}
+
+/*===================================================
+  Contact Map
+=====================================================*/
+.cs_contact_map {
+  iframe {
+    width: 100%;
+    height: 650px;
+    position: relative;
+    z-index: 1;
+    margin-bottom: -124px;
+    filter: brightness(90%) grayscale(0.6);
+    background-color: var(--gray-color);
+
+    @include cs-respond("tablet-lg") {
+      height: 480px;
+    }
+
+    @include cs-respond("tablet") {
+      height: 360px;
+    }
+  }
+}
+
+/*===================================================
+  Store Location
+=====================================================*/
+.cs_location_section {
+
+  .cs_section_heading_style_1 {
+    max-width: 648px;
+    margin-bottom: 32px;
+
+    .cs_section_title {
+      margin-bottom: 6px;
+    }
+  }
+
+}
+
+.cs_location_card_1 {
+  .cs_card_thumb {
+    overflow: hidden;
+    margin-bottom: 24px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease-in-out;
+    }
+  }
+
+  .cs_card_title {
+    margin-bottom: 12px;
+  }
+
+  .cs_card_meta {
+    display: flex;
+    gap: 12px;
+    flex-direction: column;
+    color: var(--gray2-color);
+
+    li {
+      display: flex;
+      gap: 5px;
+    }
+
+    strong {
+      font-weight: 400;
+      text-wrap: nowrap;
+      color: var(--primary-color);
+    }
+
+    a {
+      color: var(--gray2-color);
+
+      &:hover {
+        color: var(--accent-color);
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &:hover {
+    .cs_card_thumb img {
+      transform: scale(1.04);
+    }
+  }
+}
+
+/*===================================================
+  Interactive Store Map
+=====================================================*/
+.cs_location_map_section {
+  padding-bottom: 64px;
+
+  .cs_contact_map {
+    iframe {
+      height: 500px;
+      margin-top: 32px;
+      margin-bottom: 0;
+
+      @include cs-respond("tablet-lg") {
+        height: 420px;
+      }
+
+      @include cs-respond("tablet") {
+        height: 320px;
+      }
+    }
+  }
+
+  @include cs-respond("tablet-lg") {
+    padding-bottom: 50px;
+  }
+}

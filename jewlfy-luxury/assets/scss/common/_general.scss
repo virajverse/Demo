@@ -1,0 +1,339 @@
+/*=================================================================
+  05. General
+===================================================================*/
+.cs_fs_12 {
+  font-size: 12px;
+  line-height: 1.5em;
+}
+
+.cs_fs_14 {
+  font-size: 14px;
+  line-height: 1.43em;
+}
+
+.cs_fs_16 {
+  font-size: 16px;
+  line-height: 1.5em;
+}
+
+.cs_fs_18 {
+  font-size: 18px;
+  line-height: 1.44em;
+}
+
+.cs_fs_22 {
+  font-size: clamp(18px, 2.1vw, 22px);
+  line-height: 1.36em;
+}
+
+.cs_fs_28 {
+  font-size: clamp(24px, 3vw, 28px);
+  line-height: 1.36em;
+}
+
+.cs_fs_36 {
+  font-size: clamp(30px, 4.2vw, 36px);
+  line-height: 1.25em;
+}
+
+.cs_fs_48 {
+  font-size: clamp(30px, 5.2vw, 48px);
+  line-height: 1.25em;
+}
+
+.cs_fs_90 {
+  font-size: clamp(32px, 6vw, 90px);
+  line-height: 1.11em;
+}
+
+/*=====================================  
+  Classess for Fonts Weight
+=======================================*/
+.cs_light {
+  font-weight: 300;
+}
+
+.cs_normal {
+  font-weight: 400;
+}
+
+.cs_medium {
+  font-weight: 500;
+}
+
+.cs_semibold {
+  font-weight: 600;
+}
+
+.cs_bold {
+  font-weight: 700;
+}
+
+.cs_extrabold {
+  font-weight: 800;
+}
+
+.cs_black {
+  font-weight: 900;
+}
+
+/*=====================================  
+  Classess for Fonts Color
+=======================================*/
+.cs_accent_color {
+  color: var(--accent-color);
+}
+
+.cs_primary_color {
+  color: var(--primary-color);
+}
+
+.cs_border_color {
+  color: var(--border-color);
+}
+
+.cs_secondary_color {
+  color: var(--secondary-color);
+}
+
+.cs_gray_color {
+  color: var(--gray-color);
+}
+
+.cs_gray2_color {
+  color: var(--gray2-color);
+}
+
+.cs_gray3_color {
+  color: var(--gray3-color);
+}
+
+.cs_gray4_color {
+  color: var(--gray4-color);
+}
+
+.cs_gray5_color {
+  color: var(--gray5-color);
+}
+
+.cs_gray6_color {
+  color: var(--gray6-color);
+}
+
+.cs_white_color {
+  color: var(--white-color);
+}
+
+/*=====================================  
+  Classess for Fonts Family 
+=======================================*/
+.cs_primary_font {
+  font-family: var(--primary-font);
+}
+
+.cs_secondary_font {
+  font-family: var(--secondary-font);
+}
+
+/*=============================================  
+  Classess for Background Size & Colors
+===============================================*/
+.cs_accent_bg {
+  background-color: var(--accent-color);
+}
+
+.cs_primary_bg {
+  background-color: var(--primary-color);
+}
+
+.cs_body_bg {
+  background-color: var(--secondary-color);
+}
+
+.cs_success_bg {
+  background-color: var(--success-color);
+}
+
+.cs_error_bg {
+  background-color: var(--error-color);
+}
+
+.cs_white_bg {
+  background-color: var(--white-color);
+}
+
+.cs_gray_bg {
+  background-color: var(--gray-color);
+}
+
+.cs_gray2_bg {
+  background-color: var(--gray2-color);
+}
+
+.cs_gray3_bg {
+  background-color: var(--gray3-color);
+}
+
+.cs_gray4_bg {
+  background-color: var(--gray4-color);
+}
+
+.cs_gray5_bg {
+  background-color: var(--gray5-color);
+}
+
+.cs_gray6_bg {
+  background-color: var(--gray6-color);
+}
+
+.cs_border_bg {
+  background-color: var(--border-color);
+}
+
+.cs_black_bg {
+  background-color: var(--black-color);
+}
+
+.cs_bg_filed {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.cs_bg_fixed {
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+/*=============================================  
+  Classess for Border Radius
+===============================================*/
+.cs_radius_5 {
+  border-radius: 5px;
+}
+
+.cs_radius_10 {
+  border-radius: 10px;
+}
+
+.cs_radius_15 {
+  border-radius: 15px;
+}
+
+.cs_radius_20 {
+  border-radius: 20px;
+}
+
+.cs_radius_30 {
+  border-radius: 30px;
+}
+
+.cs_radius_50 {
+  border-radius: 50px;
+}
+
+.cs_radius_100 {
+  border-radius: 100%;
+}
+
+@media (max-width: 991px) {
+
+  .cs_radius_15,
+  .cs_radius_20,
+  .cs_radius_30 {
+    border-radius: 10px;
+  }
+}
+
+/*=============================================  
+  Classes for Utility Components
+===============================================*/
+.cs_mp_0 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cs_center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cs_center_column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.cs_section_padding {
+  padding: 64px 0;
+
+  @include cs-respond("tablet-lg") {
+    padding: 50px 0;
+  }
+}
+
+/*=============================================  
+  Bootstrap Classess 
+===============================================*/
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1344px;
+  }
+
+  .container-fluid {
+    max-width: 1744px;
+    padding: 0 12px !important;
+  }
+}
+
+.cs_gap_y_40 {
+  gap: 40px 0;
+
+  @media (max-width: 991px) {
+    gap: 30px 0;
+  }
+}
+
+.cs_gap_y_48 {
+  gap: 48px 0;
+
+  @media (max-width: 991px) {
+    gap: 30px 0;
+  }
+}
+
+.cs_gap_y_30 {
+  gap: 30px 0;
+}
+
+.cs_gap_y_24 {
+  gap: 24px 0;
+}
+
+.cs_gap_y_16 {
+  gap: 16px 0;
+}
+
+/*===========================================================  
+  Responsive For Common Component & Hide Elements
+=============================================================*/
+.nice-select .option.focus,
+.nice-select .option.selected.focus,
+.nice-select .option:hover {
+  color: var(--primary-color);
+  background-color: var(--border-color);
+}
+
+/*===========================================================  
+  Responsive For Common Component & Hide Elements
+=============================================================*/
+
+@media (max-width: 991px) {
+  br {
+    display: none;
+  }
+}

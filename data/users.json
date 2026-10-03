@@ -1,0 +1,11 @@
+{
+  "admin@demo.com": {
+    "email": "admin@demo.com",
+    "password": "0c23350d9d62e5b46bd6888a8e662dea:ecb9a0118cc15e598cfffca24fc0d53bad141155e308d7b9736627cad43effb67de47bc0bd83f90eb21c5677f605fbfea637d7d743dc7405a985be735e0151e3",
+    "fullName": "Taliyo Admin",
+    "role": "admin",
+    "teams": ["core", "admin"],
+    "createdAt": "2026-10-04T02:00:00.000Z",
+    "deployments": []
+  }
+}

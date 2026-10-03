@@ -1,0 +1,64 @@
+/*=====================================================
+ TABLE OF CONTENTS
+=======================================================
+  01. Variables
+  02. Mixins
+  03. Fonts
+  04. Typography
+  05. General
+  06. Header
+  07. Footer
+  08. Slider
+  09. Video Modal
+  10. Layouts
+  11. Sections
+  12. Components
+  13. Hero
+  14. About
+  15. CTA
+  16. Team
+  17. Testimonial
+  18. Products
+  19. Product Details
+  20. Modals
+  21. Cart
+  22. Utility
+  23. Post
+  24. Post Details
+  25. Contact
+  26. Accordian
+  27. Offer Modal
+=======================================================*/
+
+// DEFAULT
+@import "default/variable";
+@import "default/mixins";
+@import "default/fonts";
+@import "default/typography";
+
+// COMMON
+@import "common/general";
+@import "common/header";
+@import "common/footer";
+@import "common/slider";
+@import "common/video-modal";
+
+// SHORTCODE
+@import "shortcode/layouts";
+@import "shortcode/sections";
+@import "shortcode/components";
+@import "shortcode/hero";
+@import "shortcode/about";
+@import "shortcode/cta";
+@import "shortcode/team";
+@import "shortcode/testimonial";
+@import "shortcode/products";
+@import "shortcode/product-details";
+@import "shortcode/modals";
+@import "shortcode/cart";
+@import "shortcode/utility";
+@import "shortcode/post";
+@import "shortcode/post-details";
+@import "shortcode/contact";
+@import "shortcode/accordian";
+@import "shortcode/offer-modal";

@@ -1,0 +1,193 @@
+/*=============================================
+ 26. FAQ Section
+===============================================*/
+.cs_faq_section {
+  .cs_section_heading_style_1 {
+    max-width: 648px;
+    margin-bottom: 32px;
+
+    .cs_section_title {
+      margin-bottom: 12px;
+    }
+  }
+}
+
+/*=============================================
+ FAQ Search Box
+===============================================*/
+.cs_faq_search {
+  position: relative;
+  max-width: 648px;
+  margin: 0 auto 40px;
+
+  input {
+    width: 100%;
+    height: 55px;
+    border: none;
+    outline: none;
+    color: var(--primary-color);
+    background-color: var(--gray-color);
+    padding: 0 50px 0 24px;
+
+    &::placeholder {
+      opacity: 0.5;
+      color: var(--secondary-color);
+    }
+  }
+
+  .cs_faq_search_icon {
+    top: 50%;
+    right: 20px;
+    font-size: 22px;
+    line-height: 1;
+    position: absolute;
+    color: var(--primary-color);
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+}
+
+/*=============================================
+ FAQ Filter Tabs
+===============================================*/
+.cs_faq_filter {
+  display: flex;
+  gap: 14px 60px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 32px;
+  border-bottom: 1px solid var(--border-color);
+
+  a {
+    display: block;
+    padding-bottom: 10px;
+    margin-bottom: -1px;
+    border-bottom: 2px solid transparent;
+
+    &:hover {
+      color: var(--accent-color);
+    }
+  }
+
+  li.active a {
+    color: var(--accent-color);
+    border-color: var(--primary-color);
+  }
+
+  @include cs-respond("tablet-lg") {
+    gap: 10px 24px;
+  }
+
+  @include cs-respond("mobile") {
+    a {
+      font-size: 16px;
+    }
+  }
+}
+
+/*=============================================
+ Accordian Item — individual component
+===============================================*/
+.cs_accordian {
+  .cs_accordian_head {
+    position: relative;
+    cursor: pointer;
+    padding: 0 40px 10px 0;
+    border-bottom: 1px solid var(--border-color);
+
+    .cs_accordian_title {
+      display: block;
+      transition: all 0.3s ease;
+    }
+
+    .cs_accordian_toggle {
+      width: 16px;
+      height: 16px;
+      position: absolute;
+      top: 5px;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-color);
+      transition: transform 0.3s ease;
+    }
+  }
+
+  .cs_accordian_body {
+    padding-top: 24px;
+
+    ul {
+      list-style: disc;
+      display: flex;
+      gap: 8px;
+      flex-direction: column;
+      color: var(--primary-color);
+      margin-bottom: 0;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+
+  &.active {
+    .cs_accordian_head {
+      pointer-events: none;
+
+      .cs_accordian_toggle {
+        transform: rotate(180deg);
+      }
+    }
+
+    .cs_accordian_title {
+      color: var(--accent-color);
+    }
+  }
+}
+
+.cs_accordians_style_1 {
+  display: flex;
+  gap: 24px;
+  flex-direction: column;
+
+  .cs_accordian {
+    margin-bottom: 24px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+/*=============================================
+ Still Have Questions — Support Section
+===============================================*/
+.cs_support_section {
+  .cs_section_heading_style_1 {
+    max-width: 648px;
+    margin-bottom: 32px;
+  }
+}
+
+.cs_support_card {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+
+  .cs_support_icon {
+    flex-shrink: 0;
+    width: 88px;
+    height: 88px;
+    padding: 16px;
+    background-color: var(--gray5-color);
+
+    img {
+      border-radius: 0;
+    }
+  }
+
+  a:hover {
+    color: var(--accent-color);
+  }
+}

@@ -1,0 +1,160 @@
+/*========================================================
+ 10. Section and Layouts
+==========================================================*/
+.cs_grid_col_2 {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(2, 1fr);
+
+  @include cs-respond("mobile") {
+    gap: 24px 16px;
+  }
+
+  @include cs-respond("xsmobile") {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cs_grid_col_3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px 24px;
+
+  @include cs-respond("laptop") {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include cs-respond("tablet") {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include cs-respond("mobile") {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+.cs_grid_col_4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px 24px;
+
+  .cs_product_promo_3 {
+    grid-column: auto / span 2;
+  }
+
+  @include cs-respond("laptop") {
+    gap: 24px 16px;
+  }
+
+  @include cs-respond("tablet-lg") {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include cs-respond("xsmobile") {
+    grid-template-columns: 1fr;
+
+    .cs_product_promo_3 {
+      grid-column: auto / span 1;
+    }
+  }
+}
+
+.cs_grid_col_5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 24px 44px;
+
+  @include cs-respond("desktop") {
+    gap: 24px;
+  }
+
+  @include cs-respond("laptop") {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include cs-respond("tablet") {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include cs-respond("mobile") {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+/*=========================================================
+ Collection Grid and Card
+===========================================================*/
+.cs_collection_card {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 550px;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg,
+        rgba(32, 32, 32, 0) 30%,
+        rgba(32, 32, 32, 0.9) 100%);
+  }
+
+  .cs_collection_content {
+    position: relative;
+    z-index: 1;
+    padding: 48px;
+    max-width: 424px;
+
+    .cs_collection_title {
+      margin-bottom: 14px;
+    }
+
+    .cs_collection_desc {
+      margin-bottom: 48px;
+    }
+
+    .cs_btn_style_1 {
+      background-color: rgba(32, 32, 32, 0.3);
+      border: 1px solid var(--accent-color);
+
+      &:hover {
+        background-color: var(--accent-color);
+      }
+    }
+  }
+
+  @include cs-respond("laptop") {
+    min-height: 480px;
+  }
+
+  @include cs-respond("tablet") {
+    min-height: 440px;
+
+    .cs_collection_content {
+      padding: 24px 15px 32px;
+
+      .cs_collection_desc {
+        margin-bottom: 24px;
+      }
+    }
+  }
+
+  @include cs-respond("mobile") {
+    min-height: 400px;
+
+    .cs_collection_content {
+      width: 100%;
+    }
+  }
+}
+
+.cs_collection_grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+
+  @include cs-respond("tablet-lg") {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,1195 @@
+/*=============================================
+ 11. Feature / Trust Badges
+===============================================*/
+.cs_feature_section {
+  .cs_video_features_container {
+    display: flex;
+    align-items: flex-end;
+    gap: 30px;
+    margin-top: -150px;
+    position: relative;
+    z-index: 12;
+    pointer-events: none;
+    justify-content: space-between;
+
+    .cs_hero_video_wrap {
+      width: min(19%, 312px);
+      height: 300px;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .cs_feature_grid {
+      flex: 1;
+      max-width: 1270px;
+    }
+  }
+
+  &.cs_feature_band .cs_feature_band_in {
+    padding: 48px;
+    background-color: var(--gray4-color);
+  }
+
+  .cs_feature_grid {
+    display: flex;
+    gap: 24px;
+    justify-content: space-between;
+  }
+
+  @include cs-respond("desktop-lg") {
+    .cs_iconbox_style_1 {
+      .cs_iconbox_icon {
+        width: 80px;
+        height: 80px;
+      }
+    }
+  }
+
+  @include cs-respond("desktop") {
+    .cs_video_features_container {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .cs_hero_video_wrap {
+        width: 312px;
+        height: 300px;
+      }
+    }
+
+    &.cs_feature_band .cs_feature_band_in {
+      padding: 40px 24px;
+    }
+  }
+
+  @include cs-respond("laptop") {
+    &.cs_feature_band .cs_feature_band_in {
+      padding: 40px 20px;
+    }
+
+    .cs_feature_grid {
+      gap: 24px 15px;
+    }
+
+    .cs_iconbox_style_1 {
+      .cs_iconbox_icon {
+        width: 70px;
+        height: 70px;
+      }
+    }
+  }
+
+  @include cs-respond("tablet-lg") {
+    .cs_video_features_container {
+      margin-top: 50px;
+    }
+
+    .cs_hero_video_wrap {
+      display: none;
+    }
+
+    &.cs_feature_band .cs_feature_band_in {
+      padding: 40px 15px;
+    }
+
+    .cs_feature_grid {
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+  }
+
+  @include cs-respond("mobile") {
+    .cs_video_features_container {
+      margin-top: 50px;
+    }
+
+    .cs_hero_video_wrap {
+      display: none;
+    }
+  }
+}
+
+/*=============================================
+ Shop by Category
+===============================================*/
+.cs_shop_category {
+  .cs_section_heading_style_1 {
+    margin-bottom: 32px;
+  }
+
+  .cs_slider_controller_2 {
+    margin-top: 32px;
+    width: 100%;
+    gap: 40px;
+  }
+
+  .cs_category_slider {
+    padding-top: 32px;
+
+    .swiper-slide:nth-child(odd) {
+      transform: translateY(-32px);
+    }
+  }
+
+  .cs_category_card {
+    .cs_category_meta {
+      flex-direction: column;
+      margin-top: 28px;
+    }
+  }
+
+  @include cs-respond("tablet-lg") {
+    .cs_category_slider {
+      padding-top: 0;
+
+      .swiper-slide:nth-child(odd) {
+        transform: translateY(0);
+      }
+    }
+  }
+}
+
+/*=============================================
+ Why Jewlfy is Different
+===============================================*/
+.cs_why_different {
+  .cs_why_different_in {
+    display: grid;
+    grid-template-columns: minmax(0, 784fr) minmax(0, 536fr);
+  }
+
+  .cs_why_different_content {
+    display: flex;
+    gap: 24px;
+    flex-direction: column;
+    padding: 110px 24px 106px 112px;
+  }
+
+  .cs_section_heading_style_1 {
+    .cs_section_title {
+      margin-bottom: 12px;
+    }
+  }
+
+  .cs_why_different_cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    max-width: 648px;
+  }
+
+  .cs_why_different_card {
+    padding: 24px 24px 28px;
+
+    .cs_card_title {
+      margin-bottom: 12px;
+    }
+
+    .cs_card_text {
+      color: var(--secondary-color);
+    }
+  }
+
+  .cs_why_different_thumb {
+    position: relative;
+
+    img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &.cs_type_1 {
+    .cs_why_different_content {
+      width: min(100%, 648px);
+      padding: 64px 24px 64px 0;
+    }
+
+    .cs_section_heading_style_1 {
+      margin-bottom: 12px;
+    }
+  }
+
+  @include cs-respond("laptop") {
+    .cs_why_different_content {
+      padding: 48px;
+    }
+
+    .cs_why_different_card {
+      padding: 20px 15px 24px;
+    }
+  }
+
+  @include cs-respond("tablet-lg") {
+    .cs_why_different_in {
+      grid-template-columns: 1fr;
+    }
+
+    .cs_why_different_thumb {
+      order: -1;
+
+      img {
+        position: static;
+      }
+    }
+
+    &.cs_type_1 {
+      .cs_why_different_content {
+        width: 100%;
+        padding: 24px 0 0;
+      }
+
+      .cs_section_heading_style_1 {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  @include cs-respond("tablet") {
+    .cs_why_different_content {
+      padding: 24px 15px;
+    }
+
+    .cs_why_different_cards {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+/*=============================================
+ Our Partners
+===============================================*/
+.cs_partners_section {
+  .cs_section_heading_style_1 {
+    margin-bottom: 40px;
+  }
+
+  .cs_partners_slider {
+    .swiper-wrapper {
+      align-items: center;
+      // Keep the marquee gliding at a constant speed
+      transition-timing-function: linear;
+    }
+
+    .swiper-slide {
+      width: auto;
+    }
+  }
+
+  .cs_partner_logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      object-fit: contain;
+    }
+  }
+
+  @include cs-respond("tablet-lg") {
+    .cs_section_heading_style_1 {
+      margin-bottom: 32px;
+    }
+  }
+}
+
+/*=============================================
+ Funfact Counter Component
+===============================================*/
+.cs_funfact_list {
+  padding: 22px 24px;
+  display: grid;
+  grid-template-columns: 1fr 1.1fr 1fr;
+
+  .cs_funfact {
+
+    &:nth-child(2),
+    &:nth-child(3) {
+      display: flex;
+      justify-content: center;
+    }
+
+    &:nth-child(2) {
+      border-right: 1px solid var(--gray4-color);
+      border-left: 1px solid var(--gray4-color);
+    }
+  }
+
+  .cs_funfact_number {
+    color: var(--primary-color);
+    margin-bottom: 4px;
+    white-space: nowrap;
+    line-height: 1em;
+    display: flex;
+    align-items: center;
+  }
+
+  .cs_funfact_unit {
+    color: inherit;
+  }
+
+  @include cs-respond("tablet-lg") {
+    padding: 22px 15px;
+  }
+
+  @include cs-respond("mobile") {
+    gap: 20px 15px;
+    grid-template-columns: 1.2fr 1fr 1fr;
+
+    .cs_funfact {
+
+      &:nth-child(2),
+      &:nth-child(3) {
+        justify-content: flex-start;
+      }
+
+      &:nth-child(2) {
+        border-right: 0;
+        border-left: 0;
+      }
+    }
+  }
+
+  @include cs-respond("xsmobile") {
+    grid-template-columns: 1fr;
+  }
+}
+
+/*=============================================
+ Exclusive Insider Section
+===============================================*/
+.cs_insider_section_1 {
+  .cs_insider_in {
+    padding: 64px 0;
+    display: grid;
+    gap: 24px;
+    align-items: center;
+    grid-template-columns: 1fr 1.9fr 1fr;
+    border-top: 1px solid var(--gray4-color);
+    border-bottom: 1px solid var(--gray4-color);
+  }
+
+  .cs_insider_info {
+    max-width: 370px;
+
+    .cs_insider_info_title {
+      margin-bottom: 24px;
+    }
+
+    .cs_info_text {
+      display: flex;
+      gap: 0 2px;
+      flex-wrap: wrap;
+
+      span {
+        font-weight: 500;
+        color: var(--primary-color);
+      }
+    }
+
+    .cs_insider_info_phone {
+      display: inline-block;
+      margin-top: 13px;
+      color: var(--primary-color);
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .cs_newsletter_style_1 {
+    display: block;
+    width: min(100%, 648px);
+    margin: 0 auto;
+    padding: 0;
+
+    .cs_newsletter_heading {
+      max-width: 540px;
+      margin: 0 auto 24px;
+    }
+
+    .cs_newsletter_subtitle {
+      color: #b8962e;
+      margin-bottom: 6px;
+    }
+
+    .cs_newsletter_title {
+      margin-bottom: 12px;
+    }
+
+    .cs_newsletter_form {
+      width: 100%;
+      flex-direction: row;
+      text-align: left;
+
+      input {
+        padding: 15px 16px;
+        border-color: var(--gray4-color);
+        background-color: var(--gray-color);
+      }
+    }
+  }
+
+  .cs_insider_highlights {
+    max-width: 286px;
+    margin-left: auto;
+
+    .cs_highlights_title {
+      margin-bottom: 26px;
+    }
+
+    .cs_highlight_tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+
+      a {
+        display: inline-block;
+        padding: 6px 12px;
+        text-wrap: nowrap;
+        color: var(--primary-color);
+        background-color: var(--gray-color);
+        transition:
+          color 0.3s ease,
+          background-color 0.3s ease;
+
+        &:hover {
+          color: var(--white-color);
+          background-color: var(--primary-color);
+        }
+      }
+    }
+  }
+
+  @include cs-respond("desktop") {
+    .cs_insider_in {
+      grid-template-columns: 1fr 1.6fr 1fr;
+    }
+  }
+
+  @include cs-respond("tablet-lg") {
+    .cs_insider_in {
+      padding: 50px 0;
+      align-items: flex-start;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .cs_newsletter_style_1 {
+      width: 100%;
+      order: 1;
+      grid-column: 1 / -1;
+    }
+
+    .cs_insider_info,
+    .cs_insider_highlights {
+      max-width: 100%;
+    }
+
+    .cs_insider_info {
+      order: 2;
+    }
+
+    .cs_insider_highlights {
+      order: 2;
+    }
+  }
+
+  @include cs-respond("mobile") {
+    .cs_insider_in {
+      grid-template-columns: 1fr;
+    }
+
+    .cs_newsletter_style_1 {
+      .cs_newsletter_form {
+        flex-direction: column;
+      }
+    }
+  }
+}
+
+.cs_newsletter_section_1 {
+  .cs_newsletter_row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    padding: 84px 0;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .cs_newsletter_style_1 {
+    display: block;
+    width: min(100%, 648px);
+    padding: 0;
+
+    .cs_newsletter_heading {
+      margin-bottom: 24px;
+    }
+
+    .cs_newsletter_subtitle {
+      color: #b8962e;
+      margin-bottom: 6px;
+    }
+
+    .cs_newsletter_title {
+      margin-bottom: 12px;
+    }
+
+    .cs_newsletter_form {
+      width: 100%;
+      flex-direction: row;
+
+      input {
+        border: 0;
+        background-color: var(--gray-color);
+      }
+    }
+
+    .cs_newsletter_note {
+      margin-top: 12px;
+    }
+  }
+
+  .cs_newsletter_media {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    padding-right: 20px;
+
+    img {
+      width: 170px;
+      height: 246px;
+      object-fit: cover;
+      animation: rotationShake 10s linear infinite;
+    }
+  }
+
+  @include cs-respond("laptop") {
+    .cs_newsletter_media img {
+      width: 150px;
+      height: 220px;
+    }
+  }
+
+  @include cs-respond("tablet-lg") {
+    padding-bottom: 80px;
+
+    .cs_newsletter_row {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 40px;
+    }
+
+    .cs_newsletter_style_1 {
+      width: 100%;
+    }
+
+    .cs_newsletter_media {
+      justify-content: center;
+      padding-right: 0;
+    }
+  }
+
+  @include cs-respond("mobile") {
+    .cs_newsletter_style_1 .cs_newsletter_form {
+      flex-direction: column;
+    }
+
+    .cs_newsletter_media {
+      display: none;
+    }
+  }
+}
+
+.cs_newsletter_section_2 {
+  .cs_newsletter_style_1 {
+    display: block;
+    width: min(100%, 648px);
+    padding: 0;
+
+    .cs_newsletter_title {
+      margin-bottom: 24px;
+    }
+
+    .cs_newsletter_heading {
+      margin-bottom: 48px;
+    }
+  }
+}
+
+.cs_signature_section {
+  .cs_section_heading_styel_2 {
+    margin-bottom: 32px;
+  }
+
+  .cs_product_promo_5 {
+    height: 100%;
+    width: min(100%, 736px);
+  }
+}
+
+/*=============================================
+ Instagram — Follow us
+===============================================*/
+.cs_instagram_section {
+  .cs_instagram_gallery {
+    position: relative;
+    aspect-ratio: 1320 / 546;
+  }
+
+  .cs_instagram_item {
+    position: absolute;
+    display: block;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s cubic-bezier(0.45, 0.53, 0.5, 0.75);
+    }
+
+    .cs_instagram_icon {
+      position: absolute;
+      inset: 0;
+      font-size: 24px;
+      opacity: 0;
+      color: var(--white-color);
+      background-color: rgba(44, 44, 44, 0.5);
+      transition: opacity 0.3s ease-in;
+    }
+
+    &:hover {
+      img {
+        transform: scale(1.04);
+      }
+
+      .cs_instagram_icon {
+        opacity: 1;
+      }
+    }
+  }
+
+  .cs_insta_1 {
+    left: 33.94%;
+    top: 0;
+    width: 40.61%;
+    height: 100%;
+  }
+
+  .cs_insta_2 {
+    left: 0;
+    top: 22.34%;
+    width: 32.12%;
+    height: 45.79%;
+  }
+
+  .cs_insta_3 {
+    left: 16.97%;
+    top: 72.53%;
+    width: 15.15%;
+    height: 27.47%;
+  }
+
+  .cs_insta_4 {
+    left: 84.85%;
+    top: 22.34%;
+    width: 15.15%;
+    height: 27.47%;
+  }
+
+  .cs_insta_5 {
+    left: 93.33%;
+    top: 0;
+    width: 6.67%;
+    height: 17.95%;
+  }
+
+  .cs_insta_6 {
+    left: 76.36%;
+    top: 54.21%;
+    width: 23.64%;
+    height: 45.79%;
+  }
+
+  .cs_instagram_heading {
+    position: absolute;
+    left: 0;
+    top: 10px;
+    z-index: 1;
+    width: 28%;
+    text-align: right;
+  }
+
+  .cs_instagram_title {
+    line-height: 1.2em;
+  }
+
+  .cs_instagram_followers {
+    position: absolute;
+    left: 0;
+    bottom: 8px;
+    z-index: 1;
+
+    .cs_insta_count {
+      display: block;
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1.2em;
+    }
+  }
+
+  @include cs-respond("tablet-lg") {
+    .cs_instagram_gallery {
+      aspect-ratio: auto;
+      display: grid;
+      gap: 24px;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .cs_instagram_item {
+      position: static;
+      width: auto;
+      height: auto;
+      aspect-ratio: 1 / 1;
+    }
+
+    .cs_insta_1 {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+
+    .cs_instagram_heading,
+    .cs_instagram_followers {
+      position: static;
+      width: auto;
+      text-align: center;
+      grid-column: 1 / -1;
+    }
+
+    .cs_instagram_title br {
+      display: none;
+    }
+  }
+
+  @include cs-respond("mobile") {
+    .cs_instagram_gallery {
+      gap: 16px;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .cs_insta_1,
+    .cs_insta_6 {
+      grid-column: span 2;
+      grid-row: auto;
+    }
+
+    .cs_instagram_followers .cs_insta_count {
+      font-size: 40px;
+    }
+  }
+}
+
+/*=========================================================
+ Offer Banner
+===========================================================*/
+.cs_offer_banner_1 {
+  overflow: hidden;
+  min-height: 700px;
+  display: flex;
+  align-items: center;
+
+  .cs_banner_content {
+    max-width: 440px;
+    height: 100%;
+  }
+
+  .cs_banner_title {
+    margin-bottom: 12px;
+  }
+
+  .cs_countdown.cs_style_1 {
+    margin: 12px 0 48px;
+  }
+
+  .cs_banner_action {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px 12px;
+  }
+
+  @include cs-respond("laptop") {
+    min-height: auto;
+    padding: 50px 0 55px;
+  }
+
+  @include cs-respond("tablet-lg") {
+    background-position: left;
+
+    .cs_countdown.cs_style_1 {
+      margin: 12px 0 32px;
+    }
+  }
+}
+
+.cs_offer_banner_2 {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 700px;
+  padding: 50px 20px;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+        var(--black-color) 7%,
+        rgba(32, 32, 32, 0) 53%);
+  }
+
+  .cs_offer_content {
+    position: relative;
+    z-index: 1;
+    max-width: 620px;
+    padding-left: 180px;
+
+    .cs_offer_label {
+      margin-bottom: 4px;
+    }
+
+    .cs_offer_title {
+      margin-bottom: 12px;
+    }
+
+    .cs_offer_title_sm {
+      display: block;
+    }
+
+    .cs_offer_desc {
+      margin-bottom: 24px;
+    }
+
+    .cs_offer_price {
+      margin-bottom: 32px;
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .cs_offer_timer_label {
+      margin-bottom: 12px;
+    }
+
+    .cs_countdown {
+      margin-bottom: 24px;
+      justify-content: flex-start;
+      gap: 11px;
+
+      .cs_countdown_item {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-width: 100px;
+        height: 70px;
+        padding: 0;
+        background-color: rgba(32, 32, 32, 0.3);
+        border: 1px solid var(--white-color);
+      }
+
+      .cs_countdown_label {
+        line-height: 2em;
+      }
+
+      @include cs-respond("tablet") {
+        gap: 8px;
+
+        .cs_countdown_item {
+          min-width: 80px;
+        }
+      }
+
+      @include cs-respond("mobile") {
+        .cs_countdown_item {
+          min-width: 72px;
+        }
+      }
+    }
+
+    .cs_offer_action {
+      display: flex;
+      gap: 13px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .cs_btn_style_1 {
+      background-color: rgba(32, 32, 32, 0.3);
+      border: 1px solid var(--accent-color);
+
+      &:hover {
+        background-color: var(--accent-color);
+      }
+    }
+  }
+
+  @include cs-respond("laptop") {
+    .cs_offer_content {
+      padding-left: 60px;
+      max-width: 500px;
+    }
+  }
+
+  @include cs-respond("tablet-lg") {
+    min-height: auto;
+
+    .cs_offer_content {
+      padding-left: 0;
+      max-width: 440px;
+    }
+  }
+}
+
+/*=======================================================
+ Discover Collections and Card
+=========================================================*/
+.cs_discover_section {
+  .cs_section_heading_style_1 {
+    margin-bottom: 24px;
+  }
+
+  .cs_filter_nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px 48px;
+    margin: 0 0 40px;
+    list-style: none;
+    border-bottom: 1px solid var(--border-color);
+
+    .cs_filter_btn {
+      position: relative;
+      display: inline-block;
+      padding-bottom: 10px;
+      font-size: 18px;
+      line-height: 1.44em;
+      color: var(--primary-color);
+
+      &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -1px;
+        width: 100%;
+        height: 1px;
+        background-color: var(--primary-color);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+      }
+
+      &:hover,
+      &.active {
+        color: var(--accent-color);
+      }
+
+      &.active {
+        &::after {
+          transform: scaleX(1);
+        }
+      }
+    }
+  }
+
+  .cs_tab {
+    display: none;
+
+    &.active {
+      display: block;
+    }
+  }
+
+  .cs_discover_foot {
+    margin-top: 40px;
+
+    .cs_view_btn:hover {
+      color: var(--accent-color);
+      text-decoration: underline;
+    }
+  }
+
+  @include cs-respond("tablet-lg") {
+    .cs_tab_links {
+      gap: 8px 24px;
+    }
+  }
+}
+
+.cs_discover_card {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  width: 648px;
+  min-height: 400px;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(112deg,
+        var(--black-color) 6.98%,
+        rgba(32, 32, 32, 0) 53.07%);
+  }
+
+  .cs_discover_content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding: 32px;
+
+    .cs_discover_title {
+      margin-bottom: 12px;
+    }
+
+    .cs_discover_price {
+      margin-bottom: 48px;
+    }
+
+    @include cs-respond("tablet-lg") {
+      padding: 24px;
+
+      .cs_discover_price {
+        margin-bottom: 24px;
+      }
+    }
+  }
+
+  .cs_discover_btn {
+    display: inline-block;
+
+    &:hover {
+      color: var(--accent-color);
+    }
+  }
+
+  @include cs-respond("laptop") {
+    width: 480px;
+  }
+
+  @include cs-respond("tablet") {
+    min-height: 340px;
+  }
+
+  @include cs-respond("mobile") {
+    width: 300px;
+    min-height: 220px;
+  }
+}
+
+/*=======================================================
+ Best Sellers — product slider
+=========================================================*/
+.cs_bestseller_section {
+  .cs_section_heading_style_1 {
+    margin-bottom: 32px;
+  }
+
+  .container {
+    .cs_slider_controller_2 {
+      max-width: 1370px;
+    }
+  }
+
+  .cs_bestseller_slider_wrap {
+    position: relative;
+  }
+
+  .cs_slider_controller_2 {
+    width: calc(100vw - 24px);
+    max-width: 1770px;
+    position: absolute;
+    top: 38%;
+    left: 50%;
+    z-index: 1;
+    transform: translate(-50%, -38%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    pointer-events: none;
+
+    .cs_slider_arrow {
+      pointer-events: all;
+    }
+
+    &.position-static {
+      width: max-content;
+      transform: translate(0);
+    }
+  }
+
+  .cs_bestseller_foot {
+    margin-top: 64px;
+  }
+
+  @include cs-respond("laptop") {
+    .cs_bestseller_arrow_prev {
+      left: -10px;
+    }
+
+    .cs_bestseller_arrow_next {
+      right: -10px;
+    }
+  }
+
+  @include cs-respond("tablet-lg") {
+    .cs_bestseller_heading {
+      margin-bottom: 32px;
+    }
+
+    .cs_bestseller_arrow {
+      width: 44px;
+      height: 44px;
+      padding: 7px;
+    }
+
+    .cs_bestseller_arrow_prev {
+      left: 0;
+    }
+
+    .cs_bestseller_arrow_next {
+      right: 0;
+    }
+
+    .cs_bestseller_foot {
+      margin-top: 32px;
+    }
+  }
+}
+
+.cs_featured_products {
+  @extend .cs_bestseller_section;
+}
+
+.cs_new_arrivals_products {
+  @extend .cs_bestseller_section;
+}
+
+/*=========================================================
+ Animations
+===========================================================*/
+@keyframes rotationShake {
+  50% {
+    transform: translateX(-40px) rotate(-15deg);
+  }
+}

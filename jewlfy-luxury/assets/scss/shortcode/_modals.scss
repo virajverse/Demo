@@ -1,0 +1,566 @@
+//=====================================================
+//  20. Quick View Modal
+//=====================================================
+.cs_quickview {
+  position: fixed;
+  inset: 0;
+  z-index: 1300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  visibility: hidden;
+  pointer-events: none;
+
+  &.active {
+    visibility: visible;
+    pointer-events: auto;
+
+    .cs_quickview_overlay {
+      opacity: 0.5;
+    }
+
+    .cs_quickview_dialog {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .cs_quickview_overlay {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: zoom-out;
+    background-color: var(--black-color);
+    transition: opacity 0.3s ease;
+  }
+
+  .cs_quickview_dialog {
+    position: relative;
+    z-index: 1;
+    width: min(1180px, 100%);
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    border-radius: 8px;
+    background-color: var(--white-color);
+    opacity: 0;
+    transform: translateY(24px);
+    transition: all 0.35s cubic-bezier(0.4, 0.3, 0.5, 0.55);
+  }
+
+  .cs_quickview_close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 3;
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    line-height: 1;
+    border: none;
+    border-radius: 50%;
+    color: var(--primary-color);
+    background-color: var(--gray-color);
+    transition: all 0.3s ease;
+
+    &:hover {
+      color: var(--white-color);
+      background-color: var(--accent-color);
+    }
+  }
+
+  //  Media (left column)
+  .cs_quickview_media {
+    position: relative;
+    min-height: 100%;
+    overflow: hidden;
+    background-color: var(--gray-color);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .cs_quickview_zoom {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    z-index: 2;
+    width: 50px;
+    height: 50px;
+    font-size: 22px;
+    color: var(--primary-color);
+    border: 1px solid var(--gray2-color);
+    background-color: var(--white-color);
+    transition: all 0.3s ease;
+
+    &:hover {
+      color: var(--white-color);
+      border-color: var(--accent-color);
+      background-color: var(--accent-color);
+    }
+  }
+
+  //  Body (right column)
+  .cs_quickview_body {
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+  }
+
+  .cs_product_meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+
+  .cs_product_tag {
+    color: var(--accent-color);
+  }
+
+  .cs_product_stock {
+    color: var(--success-color);
+
+    &.out {
+      color: var(--error-color);
+    }
+  }
+
+  .cs_quickview_title {
+    margin-bottom: 12px;
+    color: var(--primary-color);
+  }
+
+  .cs_product_rating_row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 12px;
+  }
+
+  .cs_rating {
+    width: 88px;
+  }
+
+  .cs_quickview_rating_text {
+    margin-left: -7px;
+    color: var(--secondary-color);
+  }
+
+  .cs_product_scarcity {
+    position: relative;
+    padding-left: 20px;
+    color: var(--error-color);
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 1px;
+      height: 16px;
+      transform: translateY(-50%);
+      background-color: var(--gray3-color);
+    }
+  }
+
+  .cs_product_price_row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .cs_quickview_price {
+    margin: 0;
+    color: var(--primary-color);
+  }
+
+  .cs_quickview_price_old {
+    color: var(--secondary-color);
+    text-decoration: line-through;
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  .cs_quickview_desc {
+    margin-bottom: 24px;
+    color: var(--secondary-color);
+  }
+
+  //  Metal finish swatches
+  .cs_quickview_option {
+    margin-bottom: 24px;
+  }
+
+  .cs_product_option_title {
+    margin-bottom: 12px;
+    color: var(--primary-color);
+  }
+
+  .cs_product_swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .cs_product_swatch {
+    padding: 9px 17px;
+    color: var(--primary-color);
+    background-color: var(--gray5-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 100px;
+    transition: all 0.3s ease;
+
+    &:hover,
+    &.active {
+      color: var(--primary-color);
+      background-color: var(--gray4-color);
+    }
+  }
+
+  //  Quantity + buy actions
+  .cs_quickview_actions {
+    width: min(100%, 500px);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .cs_quickview_buy_label,
+  .cs_quickview_share_label {
+    font-family: var(--primary-font);
+    color: var(--primary-color);
+  }
+
+  .cs_qty_stepper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 112px;
+    height: 43px;
+    background-color: var(--white-color);
+    border: 1px solid var(--gray4-color);
+
+    .cs_qty_btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 100%;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--primary-color);
+      cursor: pointer;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: var(--accent-color);
+      }
+    }
+
+    .cs_qty_input {
+      width: 40px;
+      height: 100%;
+      border: 0;
+      background: transparent;
+      text-align: center;
+      color: var(--primary-color);
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
+  .cs_product_btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 9px 24px;
+    white-space: nowrap;
+    color: var(--white-color);
+    border-radius: 0;
+    background-color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: var(--accent-color);
+      background-color: var(--accent-color);
+    }
+  }
+
+  //  Buy Now: gold accent button
+  .cs_quickview_buy_btn {
+    color: var(--white-color);
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+
+    &:hover {
+      color: var(--white-color);
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+  }
+
+  //  Share row
+  .cs_quickview_share {
+    width: min(100%, 494px);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .cs_quickview_social {
+    gap: 10px;
+
+    a {
+      background-color: var(--gray-color);
+
+      &:hover {
+        color: var(--white-color);
+        background-color: var(--accent-color);
+      }
+    }
+  }
+
+  .cs_quickview_wishlist {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    padding: 0;
+    white-space: nowrap;
+    border: none;
+    color: var(--primary-color);
+    background-color: transparent;
+    transition: color 0.3s ease;
+
+    &:hover,
+    &.cs_active {
+      color: var(--accent-color);
+    }
+  }
+
+  @include cs-respond(tablet) {
+    .cs_quickview_dialog {
+      grid-template-columns: 1fr;
+    }
+
+    .cs_quickview_media {
+      min-height: 280px;
+      max-height: 360px;
+    }
+
+    .cs_quickview_body {
+      padding: 24px;
+    }
+  }
+
+  @include cs-respond(mobile) {
+    padding: 12px;
+
+    .cs_quickview_actions {
+      .cs_qty_stepper {
+        flex: 1 0 100%;
+      }
+
+      .cs_product_btn {
+        flex: 1;
+      }
+    }
+
+    .cs_quickview_share {
+      .cs_quickview_wishlist {
+        margin-left: 0;
+        flex: 1 0 100%;
+      }
+    }
+  }
+}
+
+.cs_offer_modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 12px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+
+  .cs_offer_modal_overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(32, 32, 32, 0.65);
+    backdrop-filter: blur(2px);
+    cursor: pointer;
+  }
+
+  .cs_offer_modal_in {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    width: 100%;
+    max-width: 900px;
+    background: var(--white-color);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+    transform: translateY(40px) scale(0.96);
+    opacity: 0;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s, opacity 0.5s ease 0.1s;
+  }
+
+  .cs_offer_modal_thumb {
+    flex: 1 1 45%;
+    min-height: 100%;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  .cs_offer_modal_content {
+    flex: 1 1 55%;
+    padding: 50px 40px;
+    text-align: center;
+  }
+
+  .cs_offer_badge {
+    display: inline-block;
+    font-family: var(--secondary-font);
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent-color);
+    padding: 6px 16px;
+    border: 1px solid var(--accent-color);
+    border-radius: 50px;
+    margin-bottom: 22px;
+  }
+
+  .cs_offer_modal_content .cs_offer_discount {
+    font-family: var(--primary-font);
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: 1;
+    color: var(--primary-color);
+    margin: 0 0 20px;
+  }
+
+  .cs_offer_modal_content .cs_offer_discount span {
+    color: var(--accent-color);
+  }
+
+  .cs_offer_modal_content .cs_offer_title {
+    font-family: var(--primary-font);
+    font-size: clamp(20px, 3vw, 28px);
+    color: var(--primary-color);
+    margin: 0 0 16px;
+  }
+
+  .cs_offer_coupon {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--secondary-font);
+    font-size: 14px;
+    color: var(--secondary-color);
+    margin-bottom: 28px;
+  }
+
+  .cs_offer_coupon b {
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: var(--primary-color);
+    border: 1px dashed var(--gray2-color);
+    border-radius: 5px;
+    padding: 6px 14px;
+    background: var(--gray-color);
+  }
+
+  .cs_offer_modal_close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 2;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: var(--white-color);
+    color: var(--primary-color);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+  }
+
+  .cs_offer_modal_close:hover {
+    background: var(--accent-color);
+    color: var(--white-color);
+    transform: rotate(90deg);
+  }
+
+  .cs_btn_style_1 {
+    font-weight: 500;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+
+    &:hover {
+      color: var(--white-color);
+      background-color: var(--primary-color);
+    }
+  }
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+
+    .cs_offer_modal_in {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+  }
+
+  @include cs-respond("tablet") {
+
+    .cs_offer_modal_in {
+      flex-direction: column;
+      max-width: 400px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .cs_offer_modal_thumb {
+      flex: none;
+      min-height: 180px;
+    }
+
+    .cs_offer_modal_content {
+      padding: 24px 15px 30px;
+    }
+  }
+
+}

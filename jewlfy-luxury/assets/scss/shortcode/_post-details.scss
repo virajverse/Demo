@@ -1,0 +1,276 @@
+/*=====================================================
+  24. Post Details — Single Blog Post
+=======================================================*/
+.cs_blog_details_section {
+
+}
+
+/*======================================
+  Blog details component
+ ======================================*/
+.cs_blog_details {
+  .cs_post_banner {
+    position: relative;
+    margin-bottom: 22px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      max-height: 550px;
+      object-fit: cover;
+    }
+  }
+
+  .cs_posted_date {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+
+    i {
+      font-size: 16px;
+    }
+  }
+
+  .cs_post_meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 32px;
+    margin-bottom: 16px;
+    color: var(--secondary-color);
+
+    li {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cs_meta_icon {
+      font-size: 16px;
+    }
+  }
+
+  .cs_post_title {
+    margin-bottom: 24px;
+  }
+
+  article {
+    margin-bottom: 32px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin-bottom: 12px;
+    }
+
+    >p {
+      margin-bottom: 12px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .cs_post_body {
+    >p {
+      margin-bottom: 24px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    strong {
+      font-weight: 500;
+      color: var(--primary-color);
+    }
+
+    .cs_blog_list {
+      padding-left: 24px;
+      list-style: disc;
+      display: flex;
+      gap: 7px;
+      flex-direction: column;
+      margin-bottom: 0;
+
+      strong {
+        font-weight: 500;
+        color: var(--primary-color);
+      }
+    }
+  }
+
+  .cs_metal_cards {
+    display: grid;
+    gap: 24px;
+    margin-bottom: 32px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .cs_metal_card {
+    padding: 24px;
+    background-color: var(--gray-color);
+
+    .cs_card_title {
+      margin-bottom: 12px;
+    }
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  .cs_blog_quote {
+    padding: 24px;
+    font-style: normal;
+    margin-bottom: 32px;
+    background-color: var(--gray5-color);
+
+    p {
+      font-size: 18px;
+      line-height: 1.45em;
+      color: var(--primary-color);
+      margin-bottom: 24px;
+    }
+
+    cite {
+      display: block;
+      font-size: 16px;
+      line-height: 1.5em;
+      font-style: normal;
+      color: var(--primary-color);
+
+      span {
+        color: var(--secondary-color);
+      }
+    }
+  }
+
+  .cs_post_details_footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 24px;
+    margin-top: 40px;
+    padding: 24px 0;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .cs_blog_tags {
+    margin: 0;
+
+    span {
+      font-weight: 500;
+      color: var(--primary-color);
+    }
+  }
+
+  .cs_blog_share {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+
+    span {
+      font-weight: 500;
+      color: var(--primary-color);
+    }
+  }
+
+  .cs_social_btns_style_1 {
+    gap: 6px;
+
+    a {
+      color: var(--primary-color);
+      background-color: var(--border-color);
+
+      &:hover {
+        color: var(--white-color);
+        background-color: var(--accent-color);
+      }
+    }
+  }
+
+  .cs_blog_navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 32px;
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      color: var(--primary-color);
+
+      &:hover {
+        color: var(--accent-color);
+      }
+    }
+  }
+}
+
+/*======================================
+  Comment form component
+ ======================================*/
+.cs_comment_wrap {
+  margin-top: 64px;
+
+  .cs_comment_heading {
+    margin-bottom: 24px;
+  }
+}
+
+.cs_comment_form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+
+  .cs_form_field_full {
+    grid-column: 1 / -1;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--primary-color);
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    resize: none;
+    padding: 15px 12px;
+    color: var(--primary-color);
+    font-family: var(--secondary-font);
+    background-color: var(--gray-color);
+
+    &::placeholder {
+      color: var(--gray2-color);
+    }
+
+    &:focus {
+      box-shadow: inset 0 0 0 1px var(--accent-color);
+    }
+  }
+
+  @include cs-respond("tablet") {
+    grid-template-columns: 1fr;
+  }
+}

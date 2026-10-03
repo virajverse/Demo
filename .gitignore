@@ -9,6 +9,10 @@ node_modules/
 # Logs
 *.log
 npm-debug.log*
+logs/
+deployment-logs/
+audit-logs/
+.analytics/
 
 # OS
 .DS_Store
@@ -18,12 +22,28 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Uploads (keep structure, ignore contents)
-uploads/*
-!uploads/.gitkeep
+# Build artifacts
+.next/
+dist/
+build/
 
-# Vercel
-.vercel/
+# Python cache (if any)
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Database files
+*.db
+*.sqlite
 
 # Demo ports tracking
 lib/.demo-ports.json
+
+# Vercel
+.vercel/

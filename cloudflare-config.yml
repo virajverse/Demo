@@ -1,0 +1,7 @@
+tunnel: 885a4c8c-d937-4685-a8f2-58ca7158acf0
+credentials-file: C:\Users\FEARLESS\.cloudflared\885a4c8c-d937-4685-a8f2-58ca7158acf0.json
+
+ingress:
+  - hostname: demo.taliyotechnologies.com
+    service: http://127.0.0.1:3000
+  - service: http_status:404

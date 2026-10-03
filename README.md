@@ -1,170 +1,108 @@
-# Taliyo Demo Hub
+# ⚡ Taliyo Marketplace Demo Hub
 
-A premium demo hosting platform for showcasing websites and web applications.
-
-## 🚀 Features
-
-### Admin Dashboard
-- **Premium Dark UI** - Modern glassmorphism design with SVG icons
-- **Upload Demos** - Support for both ZIP files and folder uploads
-- **Smart Link Generator** - Create shareable links with return URL tracking
-- **Demo Management** - Start, stop, rename, delete demos
-- **Config Editor** - Set environment variables per demo
-- **Custom URLs** - Override entry points for each demo
-- **Search & Filter** - Quickly find demos in large collections
-- **Mobile Responsive** - Works on all screen sizes
-
-### Demo Types Support
-| Type | Auto Detection | Features |
-|------|----------------|----------|
-| **Static Sites** | `index.html` | Served directly |
-| **Node.js Apps** | `package.json` with `express/koa/fastify` | Auto port allocation |
-| **Next.js Apps** | `package.json` with `next` | Dev server management |
-
-### Security
-- Cookie-based authentication
-- Protected API endpoints
-- Restricted file/folder deletion
-- Directory traversal prevention
-
-## 📦 Installation
-
-```bash
-# Clone repository
-git clone <repo-url>
-cd demo-website
-
-# Install dependencies
-npm install
-
-# Configure environment
-cp .env.example .env
-# Edit .env with your credentials
-
-# Start server
-npm start
-```
-
-## ⚙️ Configuration
-
-Create a `.env` file:
-
-```env
-ADMIN_USER=admin
-ADMIN_PASS=your_secure_password
-SECRET_KEY=your_random_secret_key
-PORT=3000
-```
-
-## 🔗 API Endpoints
-
-### Public
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/public/demos` | List all demos (public) |
-
-### Protected (Requires Auth)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/login` | Admin login |
-| POST | `/api/logout` | Admin logout |
-| GET | `/api/demos` | List demos with details |
-| POST | `/api/upload` | Upload demo (ZIP) |
-| POST | `/api/delete` | Delete demo |
-| POST | `/api/rename` | Rename demo |
-| GET | `/api/config/:name` | Get demo config |
-| POST | `/api/config/:name` | Update demo config |
-| POST | `/api/demo/start/:name` | Start server demo |
-| POST | `/api/demo/stop/:name` | Stop server demo |
-| GET | `/api/demo/status/:name` | Get demo status |
-| GET | `/api/demo/running` | List running demos |
-
-## 📁 Project Structure
-
-```
-demo-website/
-├── admin/
-│   ├── dashboard.html    # Admin panel
-│   └── login.html        # Login page
-├── lib/
-│   └── demoManager.js    # Demo process manager
-├── common/               # Shared assets
-├── uploads/              # Temp upload directory
-├── [demo-folders]/       # Uploaded demos
-├── server.js             # Main server
-├── index.html            # Landing page
-├── package.json
-└── .env
-```
-
-## 🎨 Demo Configuration
-
-Each demo can have a `.config.json` file:
-
-```json
-{
-  "customUrl": "login.html",
-  "API_KEY": "your-api-key",
-  "DATABASE_URL": "..."
-}
-```
-
-- `customUrl` - Override the entry point URL
-- Other keys are passed as environment variables to server demos
-
-## 🔄 Back Button
-
-All demo pages automatically get a floating "Back" button that:
-- Reads `?return=` parameter from URL
-- Falls back to landing page if not set
-- Excluded from admin and landing pages
-
-## 📱 Mobile Support
-
-The dashboard is fully responsive with:
-- Collapsible navigation
-- Touch-friendly buttons
-- Adaptive grid layouts
-- Optimized modals
-
-## 🛠️ Production Deployment
-
-### Recommended Setup
-
-```bash
-# Install PM2
-npm install -g pm2
-
-# Start with PM2
-pm2 start server.js --name "demo-hub"
-
-# Enable startup
-pm2 startup
-pm2 save
-```
-
-### Nginx Reverse Proxy
-
-```nginx
-server {
-    listen 80;
-    server_name demos.yourdomain.com;
-
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-```
-
-## 📝 License
-
-© Taliyo Technologies - All Rights Reserved
+> **Self-hosted Demo Deployment & Preview Platform** by **Taliyo Technologies**  
+> Easily upload, host, showcase, and manage multiple web demos (Static HTML, Node.js, Next.js) with zero DevOps overhead.
 
 ---
 
-**Built with ❤️ by Taliyo Technologies**
+## 🌟 Key Features
+
+* 🚀 **Vercel-like One-Click Upload**: Upload `.zip` archives of full websites or web apps via drag-and-drop.
+* 🔍 **Auto Framework Detection**: Automatically detects Static Sites, Node.js, Next.js, and Standalone apps.
+* ⚡ **Dynamic Port Allocation**: Launches server-based applications on isolated ports (4000+) automatically.
+* 🔄 **Reverse Proxy & Clean Routing**: Route requests seamlessly to running applications with automatic asset handling.
+* 🔙 **Smart Back-Button Injection**: Automatically injects a floating return button into demo pages so users can easily return to the marketplace gallery.
+* 🔒 **Built-in Security Firewall**: Prevents access to server configs, `.env` files, databases, and source code.
+* 📊 **Admin Dashboard & Health Monitoring**: Start, stop, delete, rename, and monitor live status of demos in real-time.
+* 📖 **Interactive API Documentation**: Full Swagger UI documentation at `/api-docs`.
+
+---
+
+## 📂 Project Structure
+
+```
+Demo Website/
+├── admin/
+│   ├── dashboard.html    # Full Admin Dashboard (Upload, start/stop, manage demos)
+│   └── login.html        # Admin Authentication page
+├── data/
+│   └── users.json        # User and deployment storage
+├── database/             # SQLite migrations and schema
+├── lib/
+│   ├── analyticsManager.js  # Traffic and event metrics
+│   ├── auditManager.js      # Security and action audit trail
+│   ├── crmManager.js        # Lead tracking
+│   ├── crypto.js            # Password hashing & verification
+│   ├── db.js                # SQLite database interface
+│   ├── demoManager.js       # Process lifecycle & port manager
+│   ├── deployManager.js     # Deployment records & logs
+│   ├── domainManager.js     # Custom domain routing
+│   ├── envManager.js        # Environment variable editor
+│   ├── fileSystem.js        # Safe file I/O helpers
+│   ├── healthMonitor.js     # Uptime and auto-recovery checks
+│   ├── userManager.js       # User accounts & sessions
+│   ├── versionManager.js    # Versioning & rollbacks
+│   ├── webhookManager.js    # GitHub webhooks
+│   └── worker.js            # Background maintenance jobs
+├── uploads/                 # Temporary upload buffer
+├── index.html               # Main Landing Page (Taliyo Technologies Live)
+├── server.js                # Core Express Server & Reverse Proxy
+├── package.json             # Node.js dependencies & scripts
+├── .env                     # Configuration and secrets
+└── cloudflare-config.yml    # Cloudflare Tunnel configuration
+```
+
+---
+
+## 🚀 Quick Start
+
+### 1. Install Dependencies
+```bash
+npm install
+```
+
+### 2. Configure Environment (`.env`)
+```ini
+ADMIN_USER=admin@demo.com
+ADMIN_PASS=Admin@1234
+PORT=3000
+SECRET_KEY=taliyosecretkey2026
+DB_TYPE=sqlite
+DB_PATH=./data/app.db
+```
+
+### 3. Start Server
+```bash
+# Production mode
+npm start
+
+# Development mode (auto-reload)
+npm run dev
+```
+
+---
+
+## 🌐 Routes & Endpoints
+
+| Route | Description |
+|---|---|
+| `GET /` | Public Landing Page (Taliyo Technologies Live) |
+| `GET /admin/login.html` | Admin Login Page |
+| `GET /admin/dashboard.html` | Admin Management Dashboard |
+| `GET /api-docs` | Interactive Swagger API Documentation |
+| `POST /api/upload` | Upload & extract demo zip file |
+| `GET /api/demos` | List all available demos |
+| `POST /api/demo/start/:name` | Launch dynamic demo process |
+| `POST /api/demo/stop/:name` | Terminate dynamic demo process |
+| `POST /api/delete` | Remove demo directory safely |
+
+---
+
+## 🔒 Security Best Practices
+* **Child Process Isolation**: Uploaded projects run with stripped environment variables to avoid leaking host credentials.
+* **Access Control**: Core files (`.env`, `*.json`, `*.db`, `server.js`) are blocked by security middleware against unauthorized public downloads.
+* **Reserved Namespace Protection**: Uploads cannot overwrite system directories (`lib`, `database`, `admin`, etc.).
+
+---
+
+© **Taliyo Technologies**. All rights reserved.

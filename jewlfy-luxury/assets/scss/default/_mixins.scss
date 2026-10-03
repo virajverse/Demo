@@ -1,0 +1,48 @@
+/*=================================================
+  02. Mixins — Responsive breakpoints
+===================================================*/
+$cs-breakpoints: (
+  "xsmobile": 420px,
+  "mobile": 575px,
+  "tablet": 767px,
+  "tablet-lg": 991px,
+  "laptop": 1199px,
+  "desktop": 1399px,
+  "desktop-lg": 1440px,
+);
+
+@mixin cs-respond($breakpoint) {
+  @if map-has-key($cs-breakpoints, $breakpoint) {
+    @media (max-width: map-get($cs-breakpoints, $breakpoint)) {
+      @content;
+    }
+  }
+
+  @else if type-of($breakpoint)==number {
+    @media (max-width: $breakpoint) {
+      @content;
+    }
+  }
+
+  @else {
+    @error "cs-respond: unknown breakpoint `#{$breakpoint}`. Use one of #{map-keys($cs-breakpoints)} or a px value.";
+  }
+}
+
+@mixin cs-respond-up($breakpoint) {
+  @if map-has-key($cs-breakpoints, $breakpoint) {
+    @media (min-width: map-get($cs-breakpoints, $breakpoint)) {
+      @content;
+    }
+  }
+
+  @else if type-of($breakpoint)==number {
+    @media (min-width: $breakpoint) {
+      @content;
+    }
+  }
+
+  @else {
+    @error "cs-respond-up: unknown breakpoint `#{$breakpoint}`. Use one of #{map-keys($cs-breakpoints)} or a px value.";
+  }
+}
