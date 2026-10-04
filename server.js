@@ -1898,6 +1898,18 @@ app.use(async (req, res, next) => {
     // Ignore API, Admin, Landing Page, and static system assets
     if (req.path.startsWith('/api') || req.path.startsWith('/admin') || req.path === '/' || req.path === '/index.html' || req.path === '/advanced-protection.js' || req.path === '/favicon.ico') return next();
 
+    // Enforce Clean Slugs: Redirect any /index.html or .html to clean slug
+    if (req.path.endsWith('/index.html')) {
+        const cleanSlug = req.path.replace(/\/index\.html$/, '') || '/';
+        const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+        return res.redirect(301, cleanSlug + query);
+    }
+    if (req.path.endsWith('.html')) {
+        const cleanSlug = req.path.replace(/\.html$/, '');
+        const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+        return res.redirect(301, cleanSlug + query);
+    }
+
     // Prevent directory traversal
     const safePath = path.normalize(req.path).replace(/^(\.\.[\/\\])+/, '');
     let filePath = path.join(__dirname, safePath);
@@ -1969,6 +1981,17 @@ app.all('/view/:demoName*', async (req, res) => {
     // Normalize target path
     if (targetPath.startsWith('//')) targetPath = targetPath.substring(1);
 
+    // Strip /index.html or .html from /view/ URLs for clean slugs
+    if (targetPath === '/index.html' || targetPath === '/index') {
+        const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+        return res.redirect(301, `/view/${demoName}${query}`);
+    }
+    if (targetPath.endsWith('.html')) {
+        const cleanSub = targetPath.replace(/\.html$/, '');
+        const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+        return res.redirect(301, `/view/${demoName}${cleanSub}${query}`);
+    }
+
     // Enforce 20-minute Rotating Gate Authorization
     if (!checkDemoAuthorization(req, res)) {
         return res.send(accessGate.renderGateHTML(req.originalUrl));
@@ -1993,8 +2016,9 @@ app.all('/view/:demoName*', async (req, res) => {
             info = await demoManager.startDemo(demoName);
 
             if (info.type === 'static' || info.type === 'error') {
-                // It's static, redirect to standard static URL
-                return res.redirect(`/${demoName}${targetPath}`);
+                // It's static, redirect to clean static slug URL
+                const cleanSub = (targetPath === '/' || targetPath === '/index.html') ? '' : targetPath.replace(/\.html$/, '');
+                return res.redirect(`/${demoName}${cleanSub}`);
             }
         } catch (e) {
             return res.status(500).send(`Failed to start demo: ${e.message}`);
@@ -2083,18 +2107,21 @@ app.use((req, res, next) => {
         // If it's a server app, redirect to /view/
         // Enforcing /view/ ensures auto-start logic works.
         if (type !== 'static') {
-            return res.redirect(`/view/${firstPart}${req.path.substring(firstPart.length + 1)}`);
+            const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+            return res.redirect(`/view/${firstPart}${req.path.substring(firstPart.length + 1)}${query}`);
         }
     }
     next();
 });
 
-
-
-
-
 // Root Landing Page
 app.get('/', (req, res) => {
+    // If auth query param is provided on root, set 20-min session cookie
+    const queryCode = req.query && (req.query.auth || req.query.passcode);
+    if (queryCode && accessGate.verifyPasscode(queryCode)) {
+        const token = accessGate.createAccessToken();
+        res.cookie('taliyo_demo_auth', token, { maxAge: 20 * 60 * 1000, httpOnly: true, sameSite: 'lax' });
+    }
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 

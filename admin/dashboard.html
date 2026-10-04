@@ -688,6 +688,19 @@
             color: #ef4444;
         }
 
+        .btn-card-ctrl.btn-share {
+            color: #38bdf8;
+            border-color: rgba(56, 189, 248, 0.35);
+            background: rgba(56, 189, 248, 0.08);
+        }
+
+        .btn-card-ctrl.btn-share:hover {
+            background: rgba(56, 189, 248, 0.22);
+            color: #7dd3fc;
+            border-color: #38bdf8;
+            transform: translateY(-2px);
+        }
+
         .btn-card-ctrl.btn-delete:hover {
             background: rgba(239, 68, 68, 0.15);
             color: #ef4444;
@@ -1272,13 +1285,8 @@
                 const isRunning = !!runningDemos[name];
                 const port = isRunning ? runningDemos[name].port : null;
 
-                // Build View URL
-                let finalUrl = `/${name}/index.html`;
-                if (demo.customUrl) {
-                    finalUrl = demo.customUrl.startsWith('http') ? demo.customUrl : `/${name}/${demo.customUrl.replace(/^\//, '')}`;
-                } else if (isRunning && type !== 'static') {
-                    finalUrl = `http://${window.location.hostname}:${port}`;
-                }
+                // Build Clean View URL (Strictly NO .html, clean slug + 20-min auth)
+                const finalUrl = getDemoCleanUrl(name, false);
 
                 // Type Chips and Status
                 let typeChip = `<span class="card-type-chip chip-static">✦ HTML5 Static</span>`;
@@ -1336,10 +1344,13 @@
                         </div>
 
                         <div class="card-actions-row">
-                            <a href="${finalUrl}" target="_blank" class="btn-visit">
+                            <a href="${finalUrl}" target="_blank" class="btn-visit" data-demo-name="${name}" title="Visit Live Demo (Clean Slug with 20-Min Auth)">
                                 Visit Live Demo
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
                             </a>
+                            <button class="btn-card-ctrl btn-share" onclick="copyDemoShareLink('${name}')" title="Copy 20-Min Client Auth Link (Clean Slug)">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                            </button>
                             ${processControl}
                             <button class="btn-card-ctrl" onclick="openRenameModal('${name}')" title="Rename Demo">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
@@ -1468,16 +1479,79 @@
             }
         }
 
+        // ---------------------------------------------------------
+        // Clean Slug & 20-Min Auth Share Link Functions
+        // ---------------------------------------------------------
+        function getDemoCleanUrl(name, includeOrigin = false, returnUrl = '') {
+            const demo = allDemos.find(d => d.name === name);
+            const type = demo ? (demo.type || 'static') : 'static';
+
+            // Clean Slug: Strictly no .html or index.html
+            let cleanSlug = `/${name}`;
+            if (demo && demo.customUrl) {
+                if (demo.customUrl.startsWith('http')) {
+                    cleanSlug = demo.customUrl;
+                } else {
+                    let custom = demo.customUrl.replace(/\/index\.html$/, '').replace(/\.html$/, '').replace(/^\//, '');
+                    cleanSlug = custom ? `/${name}/${custom}` : `/${name}`;
+                }
+            } else if (type !== 'static') {
+                cleanSlug = `/view/${name}`;
+            }
+
+            const params = [];
+            if (returnUrl) params.push(`return=${encodeURIComponent(returnUrl)}`);
+            if (currentGatePasscode) params.push(`auth=${currentGatePasscode}`);
+            const queryStr = params.length > 0 ? '?' + params.join('&') : '';
+
+            const pathWithQuery = cleanSlug.startsWith('http') ? cleanSlug : `${cleanSlug}${queryStr}`;
+            return includeOrigin ? `${window.location.origin}${pathWithQuery}` : pathWithQuery;
+        }
+
+        function copyDemoShareLink(name) {
+            const shareUrl = getDemoCleanUrl(name, true);
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    showToast(`✅ Copied 20-min clean share link for ${name}!`);
+                }).catch(() => fallbackCopy(shareUrl, name));
+            } else {
+                fallbackCopy(shareUrl, name);
+            }
+        }
+
+        function fallbackCopy(text, name) {
+            const dummy = document.createElement('textarea');
+            dummy.value = text;
+            dummy.setAttribute('readonly', '');
+            dummy.style.position = 'absolute';
+            dummy.style.left = '-9999px';
+            document.body.appendChild(dummy);
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+            showToast(`✅ Copied 20-min clean share link for ${name}!`);
+        }
+
+        function updateAllCardLinks() {
+            document.querySelectorAll('.btn-visit[data-demo-name]').forEach(btn => {
+                const demoName = btn.getAttribute('data-demo-name');
+                if (demoName) {
+                    btn.href = getDemoCleanUrl(demoName, false);
+                }
+            });
+            const genInput = document.getElementById('generatedLink');
+            if (genInput) {
+                const d = document.getElementById('demoSelect').value;
+                if (d) genInput.value = generateLink() || '';
+            }
+        }
+
         // Link Generator
         function generateLink() {
             const d = document.getElementById('demoSelect').value;
             const r = document.getElementById('returnUrl').value;
-            if (!d) return;
-            const params = [];
-            if (r) params.push(`return=${encodeURIComponent(r)}`);
-            if (currentGatePasscode) params.push(`auth=${currentGatePasscode}`);
-            const queryStr = params.length > 0 ? '?' + params.join('&') : '';
-            return `${window.location.origin}/view/${d}${queryStr}`;
+            if (!d) return '';
+            return getDemoCleanUrl(d, true, r);
         }
 
         function copyClientLink() {
@@ -1486,8 +1560,13 @@
                 alert('Please select a demo from the dropdown first');
                 return;
             }
-            navigator.clipboard.writeText(link);
-            showToast('Client demo link copied to clipboard!');
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(link).then(() => {
+                    showToast('Client demo link copied to clipboard!');
+                }).catch(() => fallbackCopy(link, 'Demo'));
+            } else {
+                fallbackCopy(link, 'Demo');
+            }
         }
 
         // Upload Handlers
@@ -1672,6 +1751,7 @@
                     const el = document.getElementById('liveGateCode');
                     if (el) el.innerText = data.passcode;
                     updateGateCountdownDisplay();
+                    updateAllCardLinks();
                 }
             } catch (e) {
                 console.warn('Failed to fetch gate passcode:', e);
