@@ -1846,7 +1846,7 @@ function checkDemoAuthorization(req, res) {
     const queryCode = req.query && (req.query.auth || req.query.passcode);
     if (queryCode && accessGate.verifyPasscode(queryCode)) {
         const token = accessGate.createAccessToken();
-        res.cookie('taliyo_demo_auth', token, { maxAge: 20 * 60 * 1000, httpOnly: true, sameSite: 'lax' });
+        res.cookie('taliyo_demo_auth', token, { maxAge: 20 * 60 * 1000, httpOnly: true, sameSite: 'lax', path: '/' });
         return true;
     }
 
@@ -1867,7 +1867,7 @@ app.post('/api/auth/gate-verify', (req, res) => {
 
     if (accessGate.verifyPasscode(passcode)) {
         const token = accessGate.createAccessToken();
-        res.cookie('taliyo_demo_auth', token, { maxAge: 20 * 60 * 1000, httpOnly: true, sameSite: 'lax' });
+        res.cookie('taliyo_demo_auth', token, { maxAge: 20 * 60 * 1000, httpOnly: true, sameSite: 'lax', path: '/' });
         return res.redirect(returnUrl);
     } else {
         return res.status(401).send(accessGate.renderGateHTML(returnUrl, '❌ Galat ya expired passcode! Kripya naya 20-minute code lekar aaiye.'));
@@ -1934,6 +1934,20 @@ app.use(async (req, res, next) => {
         }
         try {
             let content = fs.readFileSync(filePath, 'utf8');
+
+            // Extract current demo directory from request path
+            const pathParts = req.path.split('/').filter(Boolean);
+            const currentDemo = pathParts[0] || '';
+
+            // Inject <base href="/demoName/"> to ensure all relative assets (images, css, js) resolve properly
+            if (currentDemo && !['admin', 'api', 'common'].includes(currentDemo) && !content.includes('<base')) {
+                const baseTag = `\n    <base href="/${currentDemo}/">\n`;
+                if (content.includes('<head>')) {
+                    content = content.replace('<head>', `<head>${baseTag}`);
+                } else if (content.includes('<HEAD>')) {
+                    content = content.replace('<HEAD>', `<HEAD>${baseTag}`);
+                }
+            }
 
             // Inject Advanced Protection into <head> if not already present
             if (!content.includes('advanced-protection.js')) {
@@ -2018,7 +2032,8 @@ app.all('/view/:demoName*', async (req, res) => {
             if (info.type === 'static' || info.type === 'error') {
                 // It's static, redirect to clean static slug URL
                 const cleanSub = (targetPath === '/' || targetPath === '/index.html') ? '' : targetPath.replace(/\.html$/, '');
-                return res.redirect(`/${demoName}${cleanSub}`);
+                const query = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+                return res.redirect(`/${demoName}${cleanSub}${query}`);
             }
         } catch (e) {
             return res.status(500).send(`Failed to start demo: ${e.message}`);
@@ -2156,55 +2171,68 @@ app.use((req, res, next) => {
 // Serve Demo Assets and Public Static Files (Block dotfiles)
 app.use(express.static(__dirname, { extensions: ['html', 'htm'], dotfiles: 'deny' }));
 
-// 18. Catch-All Smart Proxy (Fallback for Demo Assets)
-// If express.static didn't find it, maybe it belongs to a running demo?
+// 18. Catch-All Smart Proxy (Fallback for Demo Assets & Dynamic Proxy)
+// If express.static didn't find it, resolve from referring demo or running instance
 app.use(async (req, res, next) => {
+    // If /meta.json or /meta is requested, return valid JSON
+    if (req.path === '/meta.json' || req.path === '/meta') {
+        return res.json({});
+    }
+
     const referer = req.headers.referer;
     if (!referer) return res.status(404).send('Not Found');
 
     try {
         const refUrl = new URL(referer);
-        // Check if referer is a demo view
-        const match = refUrl.pathname.match(/^\/view\/([^/]+)/);
+        // Extract demo name from referer (/view/:demoName or /:demoName)
+        const match = refUrl.pathname.match(/^\/(?:view\/)?([^\/?#]+)/);
 
         if (match && match[1]) {
             const demoName = match[1];
-            const info = demoManager.getDemoInfo(demoName);
+            if (!['admin', 'api', 'common', 'uploads', 'advanced-protection.js', 'favicon.ico'].includes(demoName)) {
+                // 1. Check if it's a running dynamic demo
+                const info = demoManager.getDemoInfo(demoName);
+                if (info && info.running) {
+                    const options = {
+                        hostname: 'localhost',
+                        port: info.port,
+                        path: req.url,
+                        method: req.method,
+                        headers: {
+                            ...req.headers,
+                            'x-forwarded-host': req.headers.host,
+                        }
+                    };
 
-            if (info && info.running) {
-                // Determine target path
-                // If existing path is /_next/..., pass as is.
-                // If it's specific, we might need to be careful? 
-                // We just proxy exact path requested.
+                    const proxyReq = http.request(options, (proxyRes) => {
+                        res.writeHead(proxyRes.statusCode, proxyRes.headers);
+                        proxyRes.pipe(res, { end: true });
+                    });
 
-                const options = {
-                    hostname: 'localhost',
-                    port: info.port,
-                    path: req.url,
-                    method: req.method,
-                    headers: {
-                        ...req.headers,
-                        // Ensure host header matches for some strict apps
-                        'x-forwarded-host': req.headers.host,
+                    proxyReq.on('error', (e) => {
+                        if (!res.headersSent) res.status(502).send('Bad Gateway');
+                    });
+
+                    req.pipe(proxyReq, { end: true });
+                    return;
+                }
+
+                // 2. Resolve static demo assets requested without the demo slug prefix
+                const safePath = path.normalize(req.path).replace(/^(\.\.[\/\\])+/, '');
+                const candidates = [
+                    path.join(__dirname, demoName, safePath),
+                    path.join(__dirname, demoName, 'assets', safePath),
+                    path.join(__dirname, demoName, 'public', safePath),
+                    path.join(__dirname, demoName, 'assets', 'js', path.basename(safePath)),
+                    path.join(__dirname, demoName, 'assets', 'css', path.basename(safePath)),
+                    path.join(__dirname, demoName, 'assets', 'img', path.basename(safePath))
+                ];
+
+                for (const cand of candidates) {
+                    if (fs.existsSync(cand) && fs.lstatSync(cand).isFile()) {
+                        return res.sendFile(cand);
                     }
-                };
-
-                // Log for debugging
-                // console.log(`[Proxy] ${req.url} -> ${demoName}:${info.port}`);
-
-                const proxyReq = http.request(options, (proxyRes) => {
-                    // if (proxyRes.statusCode === 404) return res.status(404).send('Not Found in Demo');
-                    res.writeHead(proxyRes.statusCode, proxyRes.headers);
-                    proxyRes.pipe(res, { end: true });
-                });
-
-                proxyReq.on('error', (e) => {
-                    // console.error(`Proxy Error: ${e.message}`);
-                    if (!res.headersSent) res.status(502).send('Bad Gateway');
-                });
-
-                req.pipe(proxyReq, { end: true });
-                return;
+                }
             }
         }
     } catch (e) { }
