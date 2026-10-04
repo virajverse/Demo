@@ -27,6 +27,7 @@ const userManager = require('./lib/userManager');
 const auditManager = require('./lib/auditManager');
 const crmManager = require('./lib/crmManager');
 const db = require('./lib/db');
+const accessGate = require('./lib/accessGate');
 
 // Load environment variables
 dotenv.config();
@@ -1831,6 +1832,53 @@ app.get('/launch/:demoName', (req, res) => {
     res.send(loadingPage);
 });
 
+// -------------------------------------------------------------
+// 20-Minute Rotating Access Gatekeeper System
+// -------------------------------------------------------------
+
+function checkDemoAuthorization(req, res) {
+    // 1. Admin bypass (logged in via cookie auth or user session)
+    if (req.cookies && (req.cookies.auth === process.env.SECRET_KEY || (req.cookies.userToken && userManager.verifySession(req.cookies.userToken)))) {
+        return true;
+    }
+
+    // 2. Query parameter check (?auth=123456 or ?passcode=123456)
+    const queryCode = req.query && (req.query.auth || req.query.passcode);
+    if (queryCode && accessGate.verifyPasscode(queryCode)) {
+        const token = accessGate.createAccessToken();
+        res.cookie('taliyo_demo_auth', token, { maxAge: 20 * 60 * 1000, httpOnly: true, sameSite: 'lax' });
+        return true;
+    }
+
+    // 3. Valid 20-min session cookie
+    if (req.cookies && req.cookies.taliyo_demo_auth) {
+        if (accessGate.verifyAccessToken(req.cookies.taliyo_demo_auth)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// Gate Verification POST endpoint
+app.post('/api/auth/gate-verify', (req, res) => {
+    const passcode = req.body && req.body.passcode;
+    const returnUrl = (req.body && req.body.returnUrl) || '/';
+
+    if (accessGate.verifyPasscode(passcode)) {
+        const token = accessGate.createAccessToken();
+        res.cookie('taliyo_demo_auth', token, { maxAge: 20 * 60 * 1000, httpOnly: true, sameSite: 'lax' });
+        return res.redirect(returnUrl);
+    } else {
+        return res.status(401).send(accessGate.renderGateHTML(returnUrl, '❌ Galat ya expired passcode! Kripya naya 20-minute code lekar aaiye.'));
+    }
+});
+
+// Admin endpoint to view current 20-minute live passcode
+app.get('/api/admin/gate-passcode', userAuthMiddleware, (req, res) => {
+    res.json({ success: true, ...accessGate.getCurrentGateInfo() });
+});
+
 // Serve Admin Dashboard directly (prevents HTTP 302 'Found' redirect issues)
 app.get('/advanced-protection.js', (req, res) => {
     res.sendFile(path.join(__dirname, 'advanced-protection.js'));
@@ -1847,8 +1895,8 @@ app.use('/admin', express.static(path.join(__dirname, 'admin')));
 app.use(async (req, res, next) => {
     if (req.method !== 'GET') return next();
 
-    // Ignore API, Admin, and Landing Page
-    if (req.path.startsWith('/api') || req.path.startsWith('/admin') || req.path === '/' || req.path === '/index.html') return next();
+    // Ignore API, Admin, Landing Page, and static system assets
+    if (req.path.startsWith('/api') || req.path.startsWith('/admin') || req.path === '/' || req.path === '/index.html' || req.path === '/advanced-protection.js' || req.path === '/favicon.ico') return next();
 
     // Prevent directory traversal
     const safePath = path.normalize(req.path).replace(/^(\.\.[\/\\])+/, '');
@@ -1868,6 +1916,10 @@ app.use(async (req, res, next) => {
 
     // Only process existing HTML files
     if (fs.existsSync(filePath) && fs.lstatSync(filePath).isFile() && (filePath.endsWith('.html') || filePath.endsWith('.htm'))) {
+        // Enforce 20-minute Rotating Gate Authorization
+        if (!checkDemoAuthorization(req, res)) {
+            return res.send(accessGate.renderGateHTML(req.originalUrl));
+        }
         try {
             let content = fs.readFileSync(filePath, 'utf8');
 
@@ -1916,6 +1968,11 @@ app.all('/view/:demoName*', async (req, res) => {
 
     // Normalize target path
     if (targetPath.startsWith('//')) targetPath = targetPath.substring(1);
+
+    // Enforce 20-minute Rotating Gate Authorization
+    if (!checkDemoAuthorization(req, res)) {
+        return res.send(accessGate.renderGateHTML(req.originalUrl));
+    }
 
     // Track visit start time for response time analytics
     const visitStartTime = Date.now();
@@ -2006,26 +2063,26 @@ app.all('/view/:demoName*', async (req, res) => {
     }
 });
 
-// Middleware to Redirect Root Folder access to /view/
+// Middleware to Redirect & Gatekeeper Root Folder access to /view/
 app.use((req, res, next) => {
     // Only GET
     if (req.method !== 'GET') return next();
 
     const firstPart = req.path.split('/')[1];
-    if (!firstPart || ['admin', 'api', 'common', 'uploads', 'view', 'launch'].includes(firstPart)) return next();
+    if (!firstPart || ['admin', 'api', 'common', 'uploads', 'view', 'launch', 'advanced-protection.js', 'favicon.ico', 'robots.txt'].includes(firstPart)) return next();
 
     // Check if this is a monitored demo
     const demoPath = path.join(__dirname, firstPart);
     if (fs.existsSync(demoPath) && fs.lstatSync(demoPath).isDirectory()) {
+        // Enforce Gatekeeper for direct demo folder access
+        if (!checkDemoAuthorization(req, res)) {
+            return res.send(accessGate.renderGateHTML(req.originalUrl));
+        }
+
         const type = demoManager.detectDemoType(demoPath);
         // If it's a server app, redirect to /view/
-        // BUT if user explicitly wants raw access, maybe allow?
         // Enforcing /view/ ensures auto-start logic works.
         if (type !== 'static') {
-            // Avoid redirect loop if we are just serving static assets for the app?
-            // No, server apps serve their own assets on their own port. 
-            // Accessing /demo1/style.css via PORT 3000 will fail anyway for Node apps if files aren't in root.
-            // So redirecting entire prefix is correct.
             return res.redirect(`/view/${firstPart}${req.path.substring(firstPart.length + 1)}`);
         }
     }

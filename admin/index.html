@@ -915,6 +915,59 @@
     </header>
 
     <main class="main-container">
+        <!-- 20-Minute Rotating Auth Passcode Banner -->
+        <div class="auth-gate-banner" style="
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.1) 50%, rgba(236, 72, 153, 0.08) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.35);
+            border-radius: var(--radius-lg);
+            padding: 22px 28px;
+            margin-bottom: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        ">
+            <div style="display: flex; align-items: center; gap: 18px;">
+                <div style="
+                    width: 54px; height: 54px;
+                    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+                    border-radius: 14px;
+                    display: flex; align-items: center; justify-content: center;
+                    font-size: 26px;
+                    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+                ">🔐</div>
+                <div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                        <h3 style="font-size: 17px; font-weight: 700; color: #fff;">20-Minute Rotating Demo Access Passcode</h3>
+                        <span style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;">ACTIVE GATEKEEPER</span>
+                    </div>
+                    <p style="font-size: 13px; color: var(--text-muted); margin: 0;">
+                        Direct URL visit par client ko ye code enter karna hoga. Har 20 minute me code automatically change hota hai.
+                    </p>
+                </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+                <div style="text-align: right; margin-right: 8px;">
+                    <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 4px;">CURRENT LIVE CODE</div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div id="liveGateCode" style="
+                            font-size: 26px; font-weight: 800; font-family: monospace; letter-spacing: 4px; color: #38bdf8;
+                            background: rgba(0,0,0,0.4); padding: 4px 16px; border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.3);
+                        ">------</div>
+                        <button onclick="copyGateCode()" class="btn-nav" title="Copy Passcode" style="padding: 8px 12px; font-size: 12px;">📋 Copy</button>
+                    </div>
+                    <div id="gateCountdown" style="font-size: 11px; color: #f59e0b; margin-top: 4px; font-weight: 600;">⏳ Rotates in: --m --s</div>
+                </div>
+
+                <button onclick="copy1ClickLink()" class="btn-primary" style="padding: 10px 18px; font-size: 13px; border-radius: 10px; display: flex; align-items: center; gap: 6px;">
+                    🔗 Copy 1-Click Access Link
+                </button>
+            </div>
+        </div>
+
         <!-- Top Metrics -->
         <div class="stats-grid">
             <div class="stat-card">
@@ -1420,7 +1473,11 @@
             const d = document.getElementById('demoSelect').value;
             const r = document.getElementById('returnUrl').value;
             if (!d) return;
-            return `${window.location.origin}/${d}/index.html` + (r ? `?return=${encodeURIComponent(r)}` : '');
+            const params = [];
+            if (r) params.push(`return=${encodeURIComponent(r)}`);
+            if (currentGatePasscode) params.push(`auth=${currentGatePasscode}`);
+            const queryStr = params.length > 0 ? '?' + params.join('&') : '';
+            return `${window.location.origin}/view/${d}${queryStr}`;
         }
 
         function copyClientLink() {
@@ -1598,13 +1655,67 @@
             }
         }
 
-        async function logout() {
-            await fetch('/api/logout', { method: 'POST' });
-            window.location.href = '/admin/login.html';
+        // ---------------------------------------------------------
+        // 20-Minute Rotating Auth Passcode Management
+        // ---------------------------------------------------------
+        let currentGatePasscode = '';
+        let gateSecondsRemaining = 0;
+        let gateTimerInterval = null;
+
+        async function fetchGatePasscode() {
+            try {
+                const res = await fetch('/api/admin/gate-passcode');
+                const data = await res.json();
+                if (data.success) {
+                    currentGatePasscode = data.passcode;
+                    gateSecondsRemaining = data.remainingSeconds;
+                    const el = document.getElementById('liveGateCode');
+                    if (el) el.innerText = data.passcode;
+                    updateGateCountdownDisplay();
+                }
+            } catch (e) {
+                console.warn('Failed to fetch gate passcode:', e);
+            }
+        }
+
+        function updateGateCountdownDisplay() {
+            const mins = Math.floor(gateSecondsRemaining / 60);
+            const secs = gateSecondsRemaining % 60;
+            const el = document.getElementById('gateCountdown');
+            if (el) {
+                el.innerText = `⏳ Rotates in: ${mins}m ${secs < 10 ? '0' : ''}${secs}s`;
+            }
+        }
+
+        function startGateTimer() {
+            if (gateTimerInterval) clearInterval(gateTimerInterval);
+            gateTimerInterval = setInterval(() => {
+                if (gateSecondsRemaining > 0) {
+                    gateSecondsRemaining--;
+                    updateGateCountdownDisplay();
+                } else {
+                    fetchGatePasscode();
+                }
+            }, 1000);
+        }
+
+        function copyGateCode() {
+            if (!currentGatePasscode) return;
+            navigator.clipboard.writeText(currentGatePasscode);
+            showToast(`Passcode ${currentGatePasscode} copied to clipboard! Share with client.`);
+        }
+
+        function copy1ClickLink() {
+            if (!currentGatePasscode) return;
+            const link = `${window.location.origin}/?auth=${currentGatePasscode}`;
+            navigator.clipboard.writeText(link);
+            showToast(`1-Click 20-min access link copied!`);
         }
 
         // Initialize
         loadDemos();
+        fetchGatePasscode();
+        startGateTimer();
     </script>
 </body>
 
