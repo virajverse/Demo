@@ -1,12 +1,17 @@
 #!/bin/bash
 # =========================================================
 # Taliyo Technologies - All-In-One Google Colab Runner
-# Hosts Demo Marketplace on Custom Subdomain (Cloudflare / Localtunnel)
+# Hosts Demo Marketplace on Custom Subdomain (Cloudflare)
 # =========================================================
 
 echo "========================================================="
 echo "⚡ Starting Taliyo Demo Hub Deployment in Google Colab..."
 echo "========================================================="
+
+# Stop any previous instances to free port 3000
+pkill -f "node server.js" 2>/dev/null || true
+pkill -f "cloudflared" 2>/dev/null || true
+sleep 1
 
 # 1. System packages (PHP 8, SQLite, Composer)
 if ! command -v php &> /dev/null; then
@@ -15,7 +20,7 @@ if ! command -v php &> /dev/null; then
     DEBIAN_FRONTEND=noninteractive apt-get install -y -qq php-cli php-sqlite3 php-curl php-mbstring php-zip php-gd composer > /dev/null 2>&1
     echo "✅ PHP & SQLite installed successfully: $(php -v | head -n 1)"
 else
-    echo "✅ [1/4] PHP runtime is already installed."
+    echo "✅ [1/4] PHP runtime is already installed: $(php -v | head -n 1)"
 fi
 
 # 2. Install Cloudflared binary
@@ -29,18 +34,36 @@ else
     echo "✅ [2/4] Cloudflared is already installed."
 fi
 
-# 3. Node.js dependencies
+# 3. Ensure Environment File (.env) exists
+if [ ! -f ".env" ]; then
+    echo "⚙️ Creating default .env configuration..."
+    cat << 'EOF' > .env
+ADMIN_USER=admin@demo.com
+ADMIN_PASS=Admin@1234
+PORT=3000
+SECRET_KEY=taliyosecretkey2026
+DB_TYPE=sqlite
+DB_PATH=./data/app.db
+EOF
+fi
+
+# Ensure data & demos directories exist
+mkdir -p data demos uploads
+
+# 4. Node.js dependencies
 echo "📦 [3/4] Installing Node dependencies..."
-npm install --omit=dev --no-audit --no-fund > /dev/null 2>&1
+if [ ! -d "node_modules" ] || [ ! -d "node_modules/express" ]; then
+    npm install --omit=dev --no-audit --no-fund
+fi
 echo "✅ Node dependencies ready."
 
-# 4. Start Demo Server
+# 5. Start Demo Server
 echo "🚀 [4/4] Starting Taliyo Demo Server on port 3000..."
 node server.js > server.log 2>&1 &
 SERVER_PID=$!
 
 READY=0
-for i in {1..20}; do
+for i in {1..25}; do
     HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:3000 2>/dev/null)
     if [ "$HTTP_STATUS" != "000" ] && [ -n "$HTTP_STATUS" ]; then
         echo "✅ Demo Server is LIVE at http://127.0.0.1:3000 (HTTP $HTTP_STATUS, PID: $SERVER_PID)"
@@ -51,8 +74,11 @@ for i in {1..20}; do
 done
 
 if [ $READY -eq 0 ]; then
-    echo "⚠️ Server taking time to respond. Log preview:"
-    tail -n 15 server.log 2>/dev/null
+    echo "❌ Error: Demo Server failed to start on port 3000! Printing server.log:"
+    echo "---------------------------------------------------------"
+    cat server.log
+    echo "---------------------------------------------------------"
+    exit 1
 fi
 
 echo "========================================================="
@@ -61,11 +87,9 @@ echo "========================================================="
 
 # Ensure Cloudflare tunnel credentials and config exist
 mkdir -p .cloudflared
-if [ ! -f ".cloudflared/885a4c8c-d937-4685-a8f2-58ca7158acf0.json" ]; then
-    cat << 'EOF' > .cloudflared/885a4c8c-d937-4685-a8f2-58ca7158acf0.json
+cat << 'EOF' > .cloudflared/885a4c8c-d937-4685-a8f2-58ca7158acf0.json
 {"AccountTag":"6615cef6609de5e094c2706439e31bb8","TunnelSecret":"2ngbJwgJ6mtCzHpJkge/iawXZ9fyeb6p0h8ciIIMoqY=","TunnelID":"885a4c8c-d937-4685-a8f2-58ca7158acf0","Endpoint":""}
 EOF
-fi
 
 cat << 'EOF' > .cloudflared/config.yml
 tunnel: 885a4c8c-d937-4685-a8f2-58ca7158acf0
