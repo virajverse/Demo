@@ -52,8 +52,15 @@ mkdir -p data demos uploads
 
 # 4. Node.js dependencies
 echo "📦 [3/4] Installing Node dependencies..."
-if [ ! -d "node_modules" ] || [ ! -d "node_modules/express" ]; then
+if ! node -e "require('helmet'); require('express'); require('sqlite3'); require('winston');" >/dev/null 2>&1; then
+    echo "⚙️ Installing missing npm dependencies (express, helmet, sqlite3, etc.)..."
     npm install --omit=dev --no-audit --no-fund
+fi
+
+# Sanity check to be 100% sure helmet and core dependencies are ready
+if ! node -e "require('helmet'); require('express');" >/dev/null 2>&1; then
+    echo "⚙️ Force-installing helmet and core packages..."
+    npm install helmet express winston sqlite3 dotenv cors compression adm-zip multer cookie-parser express-rate-limit express-validator redis swagger-jsdoc swagger-ui-express
 fi
 echo "✅ Node dependencies ready."
 
