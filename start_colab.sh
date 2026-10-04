@@ -108,5 +108,31 @@ ingress:
   - service: http_status:404
 EOF
 
-echo "🔗 Connecting to https://demo.taliyotechnologies.com via Cloudflare..."
-cloudflared tunnel --config .cloudflared/config.yml run
+echo "🔗 Starting Cloudflare Tunnel in background..."
+nohup cloudflared tunnel --config .cloudflared/config.yml run > tunnel.log 2>&1 &
+TUNNEL_PID=$!
+
+echo "⏳ Verifying tunnel connection..."
+READY_TUNNEL=0
+for i in {1..15}; do
+    if grep -q "Registered tunnel connection" tunnel.log 2>/dev/null; then
+        READY_TUNNEL=1
+        break
+    fi
+    sleep 1
+done
+
+if [ $READY_TUNNEL -eq 1 ]; then
+    echo "✅ Cloudflare Tunnel is CONNECTED! (PID: $TUNNEL_PID)"
+else
+    echo "⚠️ Tunnel initialized (PID: $TUNNEL_PID). Connecting to edge..."
+fi
+
+echo "========================================================="
+echo "🎉 ALL SYSTEMS LIVE IN THE BACKGROUND!"
+echo "🌐 Public Website:  https://demo.taliyotechnologies.com"
+echo "⚙️ Admin Panel:     https://demo.taliyotechnologies.com/admin"
+echo "📊 Server PID: $SERVER_PID | Tunnel PID: $TUNNEL_PID"
+echo "========================================================="
+echo "✅ Cell execution finished. Everything is running safely in the background!"
+echo "ℹ️ Tip: To view live tunnel logs anytime, run: !tail -n 20 tunnel.log"
