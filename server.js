@@ -1832,6 +1832,10 @@ app.get('/launch/:demoName', (req, res) => {
 });
 
 // Serve Admin Dashboard directly (prevents HTTP 302 'Found' redirect issues)
+app.get('/advanced-protection.js', (req, res) => {
+    res.sendFile(path.join(__dirname, 'advanced-protection.js'));
+});
+
 app.get(['/admin', '/admin/', '/admin/index.html'], (req, res) => {
     res.sendFile(path.join(__dirname, 'admin', 'dashboard.html'));
 });
@@ -1839,7 +1843,7 @@ app.get(['/admin', '/admin/', '/admin/index.html'], (req, res) => {
 // Serve Admin Static Assets
 app.use('/admin', express.static(path.join(__dirname, 'admin')));
 
-// Middleware to inject Back Button into all Demo HTML files
+// Middleware to inject Back Button and Advanced Protection into all Demo HTML files
 app.use(async (req, res, next) => {
     if (req.method !== 'GET') return next();
 
@@ -1867,7 +1871,17 @@ app.use(async (req, res, next) => {
         try {
             let content = fs.readFileSync(filePath, 'utf8');
 
-            // Script to inject
+            // Inject Advanced Protection into <head> if not already present
+            if (!content.includes('advanced-protection.js')) {
+                const protectTag = '\n    <!-- Advanced Code Protection -->\n    <script src="/advanced-protection.js"></script>\n';
+                if (content.includes('</head>')) {
+                    content = content.replace('</head>', `${protectTag}</head>`);
+                } else if (content.includes('</HEAD>')) {
+                    content = content.replace('</HEAD>', `${protectTag}</HEAD>`);
+                }
+            }
+
+            // Script to inject Back Button
             const injection = `
             <style>
                 .taliyo-back-btn { position: fixed; top: 20px; left: 20px; z-index: 2147483647; width: 45px; height: 45px; background: #0f172a; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0 4px 20px rgba(0,0,0,0.4); transition: all 0.2s ease; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; }

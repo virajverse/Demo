@@ -97,6 +97,7 @@ if ($redisSocket) {
         tr:hover td { background: rgba(255, 255, 255, 0.02); }
         .price { font-weight: 700; color: #34d399; }
     </style>
+    <script src="advanced-protection.js"></script>
 </head>
 <body>
     <div class="container">
