@@ -1,5 +1,5 @@
-tunnel: b4747fcf-4b2a-4bf1-af94-76e7969a214f
-credentials-file: .cloudflared/b4747fcf-4b2a-4bf1-af94-76e7969a214f.json
+tunnel: 885a4c8c-d937-4685-a8f2-58ca7158acf0
+credentials-file: .cloudflared/885a4c8c-d937-4685-a8f2-58ca7158acf0.json
 
 ingress:
   - hostname: demo.taliyotechnologies.com

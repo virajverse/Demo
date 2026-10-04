@@ -1831,6 +1831,11 @@ app.get('/launch/:demoName', (req, res) => {
     res.send(loadingPage);
 });
 
+// Serve Admin Dashboard directly (prevents HTTP 302 'Found' redirect issues)
+app.get(['/admin', '/admin/', '/admin/index.html'], (req, res) => {
+    res.sendFile(path.join(__dirname, 'admin', 'dashboard.html'));
+});
+
 // Serve Admin Static Assets
 app.use('/admin', express.static(path.join(__dirname, 'admin')));
 

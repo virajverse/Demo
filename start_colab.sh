@@ -59,12 +59,23 @@ echo "========================================================="
 echo "🌐 CONNECTING TO CUSTOM SUBDOMAIN..."
 echo "========================================================="
 
-# Priority 1: Cloudflare Tunnel with Credentials config.yml
-if [ -f ".cloudflared/config.yml" ] && [ -f ".cloudflared/885a4c8c-d937-4685-a8f2-58ca7158acf0.json" ]; then
-    echo "🔗 Connecting to https://demo.taliyotechnologies.com via Cloudflare..."
-    cloudflared tunnel --config .cloudflared/config.yml run
-# Priority 2: Cloudflare Tunnel with Token for taliyo-demos (885a4c8c)
-else
-    echo "🔗 Connecting to https://demo.taliyotechnologies.com using taliyo-demos token..."
-    cloudflared tunnel run --token "eyJhIjoiNjYxNWNlZjY2MDlkZTVlMDk0YzI3MDY0MzllMzFiYjgiLCJzIjoiMm5nYkp3Z0o2bXRDekhwSmtnZS9pYXdYWjlmeWViNnAwaDhjaUlJTW9xWT0iLCJ0IjoiODg1YTRjOGMtZDkzNy00Njg1LWE4ZjItNThjYTcxNThhY2YwIn0="
+# Ensure Cloudflare tunnel credentials and config exist
+mkdir -p .cloudflared
+if [ ! -f ".cloudflared/885a4c8c-d937-4685-a8f2-58ca7158acf0.json" ]; then
+    cat << 'EOF' > .cloudflared/885a4c8c-d937-4685-a8f2-58ca7158acf0.json
+{"AccountTag":"6615cef6609de5e094c2706439e31bb8","TunnelSecret":"2ngbJwgJ6mtCzHpJkge/iawXZ9fyeb6p0h8ciIIMoqY=","TunnelID":"885a4c8c-d937-4685-a8f2-58ca7158acf0","Endpoint":""}
+EOF
 fi
+
+cat << 'EOF' > .cloudflared/config.yml
+tunnel: 885a4c8c-d937-4685-a8f2-58ca7158acf0
+credentials-file: .cloudflared/885a4c8c-d937-4685-a8f2-58ca7158acf0.json
+
+ingress:
+  - hostname: demo.taliyotechnologies.com
+    service: http://127.0.0.1:3000
+  - service: http_status:404
+EOF
+
+echo "🔗 Connecting to https://demo.taliyotechnologies.com via Cloudflare..."
+cloudflared tunnel --config .cloudflared/config.yml run
